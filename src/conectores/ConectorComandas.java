@@ -27,8 +27,7 @@ public class ConectorComandas extends Conectores{
             try {
                 File ficheroComandas = new File(direccionAux + i + ".xml");
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder;
-                builder = factory.newDocumentBuilder();
+                DocumentBuilder builder = factory.newDocumentBuilder();
                 Document MensajeXML = builder.parse(ficheroComandas);
                 xmlFiles.add(MensajeXML);
                 
