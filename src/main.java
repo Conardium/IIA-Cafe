@@ -2,11 +2,7 @@
 import conectores.ConectorComandas;
 import puertos.Puerto;
 import slot.Slot;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+import tareas.Splitter;
 
 /**
  *
@@ -21,8 +17,10 @@ public class main {
     
     //************Slots**********//
     static Slot SInicial = new Slot();
+    static Slot S2 = new Slot();
     
-    
+    //************Tareas**************//
+    static Splitter TSplitter = new Splitter();
     
     
     //main//
@@ -30,10 +28,22 @@ public class main {
         
         for (int i = 1; i <= 9; i++) {
             
-            //Escribimos los Mensajes en el puerto Inicial 1 a 1
-            PInicial.setPuerto(CInicial.leerMensaje());
-            SInicial.setMensaje(PInicial.getPuerto());
+            //Escribimos los Mensajes en el puerto Inicial del 1 al 9
+            PInicial.setPuerto(CInicial.leerMensaje()); //FUNCIONANDO
+            SInicial.setMensaje(PInicial.getPuerto()); //FUNCIONANDO
+            //Actua el Splitter
+            TSplitter.getMSJslot(SInicial.getMensaje()); //FUNCIONANDO
+            TSplitter.realizarTarea();
+            for (int j = 0 ; j < TSplitter.devolverNConjuntos(); j++)
+            {
+                System.out.println("Order " + i + " Parte " + j);
+                S2.setMensaje(TSplitter.setMSJslot());
+            }
         }
+
+        // ===== PARA COMPROBAR SI LA INFORMACION DEL DOCUMENTO LLEGA BIEN ======
+        /*System.out.println(Mensaje.getFirstChild().getFirstChild().getNodeName()  + " "
+                + Mensaje.getFirstChild().getFirstChild().getTextContent());*/
         
 
     }

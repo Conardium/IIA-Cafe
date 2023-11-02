@@ -13,16 +13,22 @@ import org.w3c.dom.Document;
  */
 public class Slot {
     
-    private ArrayList<Document> xmlBuffer;
+    private ArrayList<Document> xmlBuffer = new ArrayList<>();
     //hace falta mas metodos porque no todos leen los mensajes de la misma forma dice el profe
 
     public Document getMensaje() {
-        
+
         return xmlBuffer.remove(0);
     }
     
     public void setMensaje(Document Mensaje) {
-        
+        //Mensajes completos
+        /*System.out.println(Mensaje.getFirstChild().getFirstChild().getNodeName()  + " "
+                + Mensaje.getFirstChild().getFirstChild().getTextContent());*/
+
+        //Mensajes parciales
+        System.out.println(Mensaje.getFirstChild().getPrefix());
+
         xmlBuffer.add(Mensaje);
     }
     

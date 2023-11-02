@@ -15,7 +15,8 @@ public class Puerto {
     Document xmlFile;
 
     public Document getPuerto() {
-        
+
+        //System.out.println(xmlFile.getFirstChild().getFirstChild().getTextContent());
         return xmlFile;
     }
 

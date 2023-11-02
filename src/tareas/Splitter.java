@@ -9,11 +9,25 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
 import java.util.ArrayList;
+import java.util.ArrayList;
+import org.w3c.dom.Document;
 
 public class Splitter implements ITarea{
 
     Document xmlEntrada;
-    ArrayList<Document> xmlSalida;
+    ArrayList<Document> xmlSalida = new ArrayList<>();
+
+    @Override
+    public void getMSJslot(Document xmlE){
+
+        xmlEntrada = xmlE;
+    }
+
+    @Override
+    public Document setMSJslot(){
+
+        return xmlSalida.remove(0);
+    }
 
     @Override
     public void realizarTarea() {
@@ -29,14 +43,15 @@ public class Splitter implements ITarea{
             String numOrder = (String) expression.evaluate(xmlEntrada, XPathConstants.STRING);
 
             //Pillamos todos los nodo hot
-            NodeList hotNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[@type='hot']//drinks").evaluate(xmlEntrada, XPathConstants.NODESET);
+            NodeList hotNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='hot']").evaluate(xmlEntrada, XPathConstants.NODESET);
             
             //Hot
             for (int i = 0; i < hotNodeList.getLength(); i++) {
-                Node nodoHot = hotNodeList.item(i);
 
                 //Crear un documento XML
                 Document xmlOut = dBuilder.newDocument();
+
+                Node nodoHot = xmlOut.importNode(hotNodeList.item(i), true);
 
                 //Creo una nuevo Nodo que va a ser mi cabecera
                 Node NodoPadre = xmlOut.createElement("cafe_order");
@@ -54,14 +69,15 @@ public class Splitter implements ITarea{
             }
             
             //Pillamos todos los nodo cold
-            NodeList coldNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[@type='cold']//drinks").evaluate(xmlEntrada, XPathConstants.NODESET);
+            NodeList coldNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='cold']").evaluate(xmlEntrada, XPathConstants.NODESET);
             
             //Cold
             for (int i = 0; i < coldNodeList.getLength(); i++) {
-                Node nodoCold = coldNodeList.item(i);
 
                 //Crear un documento XML
                 Document xmlOut = dBuilder.newDocument();
+
+                Node nodoCold = xmlOut.importNode(coldNodeList.item(i), true);
 
                 //Creo un Nuevo nodo que va a ser mi cabecera
                 Node NodoPadre = xmlOut.createElement("cafe_order");
@@ -82,4 +98,11 @@ public class Splitter implements ITarea{
             e.printStackTrace();
         }
     }
+
+    public int devolverNConjuntos()
+    {
+        //System.out.println(xmlSalida.size());
+        return xmlSalida.size();
+    }
+
 }
