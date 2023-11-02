@@ -13,7 +13,19 @@ import java.util.ArrayList;
 public class Splitter implements ITarea{
 
     Document xmlEntrada;
-    ArrayList<Document> xmlSalida;
+    ArrayList<Document> xmlSalida = new ArrayList<>();
+
+    @Override
+    public void getMSJslot(Document xmlE){
+
+        xmlEntrada = xmlE;
+    }
+
+    @Override
+    public Document setMSJslot(){
+
+        return xmlSalida.remove(0);
+    }
 
     @Override
     public void realizarTarea() {
@@ -29,7 +41,7 @@ public class Splitter implements ITarea{
             String numOrder = (String) expression.evaluate(xmlEntrada, XPathConstants.STRING);
 
             //Pillamos todos los nodo hot
-            NodeList hotNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[@type='hot']//drinks").evaluate(xmlEntrada, XPathConstants.NODESET);
+            NodeList hotNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='hot']").evaluate(xmlEntrada, XPathConstants.NODESET);
             
             //Hot
             for (int i = 0; i < hotNodeList.getLength(); i++) {
