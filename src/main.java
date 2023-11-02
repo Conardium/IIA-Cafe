@@ -36,7 +36,6 @@ public class main {
             TSplitter.realizarTarea();
             for (int j = 0 ; j < TSplitter.devolverNConjuntos(); j++)
             {
-                System.out.println("Order " + i + " Parte " + j);
                 S2.setMensaje(TSplitter.setMSJslot());
             }
         }

@@ -16,12 +16,12 @@ import org.w3c.dom.Document;
  */
 public class ConectorComandas extends Conectores{
 
-    ArrayList<Document> xmlFiles;
 
     public ConectorComandas() {
 
         xmlFiles = new ArrayList<>();
-        String direccionAux = "./comandas/order";
+        String direccionAux = System.getProperty("user.dir") + "\\src\\comandas\\order";
+        System.out.println(direccionAux);
 
         for (int i = 1; i <= 9; i++) {
             try {

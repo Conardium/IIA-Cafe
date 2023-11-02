@@ -27,7 +27,7 @@ public class Slot {
                 + Mensaje.getFirstChild().getFirstChild().getTextContent());*/
 
         //Mensajes parciales
-        System.out.println(Mensaje.getFirstChild().getPrefix());
+        //System.out.println(Mensaje.getFirstChild());
 
         xmlBuffer.add(Mensaje);
     }
