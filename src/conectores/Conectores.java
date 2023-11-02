@@ -14,12 +14,12 @@ public abstract class  Conectores {
     
     public Document leerMensaje() {
         
-        return xmlFiles.remove(0); 
+        return xmlFiles.remove(0);
     }
-    
+
     public void escribirMensaje(Document Mensaje) {
         
        xmlFiles.add(Mensaje);
     }
-    
+
 }
