@@ -13,11 +13,10 @@ import org.w3c.dom.Document;
  */
 public interface ITarea {
 
-
     public void realizarTarea();
 
     public void getMSJslot(Document xmlE);
-    public Document setMSJslot();
 
+    public Document setMSJslot(int v);
     
 }

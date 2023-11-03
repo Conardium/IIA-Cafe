@@ -31,6 +31,7 @@ public class main {
             //Escribimos los Mensajes en el puerto Inicial del 1 al 9
             PInicial.setPuerto(CInicial.leerMensaje()); //FUNCIONANDO
             SInicial.setMensaje(PInicial.getPuerto()); //FUNCIONANDO
+
             //Actua el Splitter
             TSplitter.getMSJslot(SInicial.getMensaje()); //FUNCIONANDO
             TSplitter.realizarTarea();

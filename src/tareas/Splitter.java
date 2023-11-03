@@ -30,7 +30,7 @@ public class Splitter implements ITarea {
                 + xmlSalida.get(0).getFirstChild().getFirstChild().getTextContent() + " "
                 + xmlSalida.get(0).getFirstChild().getLastChild().getLastChild().getNodeName() + " "
                 + xmlSalida.get(0).getFirstChild().getLastChild().getLastChild().getTextContent());
-        
+
         return xmlSalida.remove(0);
     }
 
