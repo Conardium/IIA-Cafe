@@ -15,6 +15,7 @@ public class Splitter implements ITarea {
 
     Document xmlEntrada;
     ArrayList<Document> xmlSalida = new ArrayList<>();
+    private int nEllamada = 0;
 
     @Override
     public void getMSJslot(Document xmlE) {
@@ -23,7 +24,7 @@ public class Splitter implements ITarea {
     }
 
     @Override
-    public Document setMSJslot() {
+    public Document setMSJslot(int v) {
 
         //Muestro el MSJ
         System.out.println(xmlSalida.get(0).getFirstChild().getFirstChild().getNodeName() + " "
@@ -70,6 +71,7 @@ public class Splitter implements ITarea {
                 NodoPadre.appendChild(nodoHot);
 
                 //Guardo el xmlSalida
+                nEllamada++;
                 xmlSalida.add(xmlOut);
             }
 
@@ -91,11 +93,12 @@ public class Splitter implements ITarea {
                 id.appendChild(xmlOut.createTextNode(numOrder));
                 NodoPadre.appendChild(id);
 
-                //Pongo el hijo hot
+                //Pongo el hijo cold
                 Node nodoCold = xmlOut.importNode(coldNodeList.item(i), true);
                 NodoPadre.appendChild(nodoCold);
 
                 //Guardo el xmlSalida
+                nEllamada++;
                 xmlSalida.add(xmlOut);
             }
 
@@ -106,7 +109,7 @@ public class Splitter implements ITarea {
 
     public int devolverNConjuntos() {
         //System.out.println(xmlSalida.size());
-        return xmlSalida.size();
+        return nEllamada;
     }
 
 }

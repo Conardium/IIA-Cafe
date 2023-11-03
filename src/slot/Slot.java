@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 public class Slot {
     
     private ArrayList<Document> xmlBuffer = new ArrayList<>();
+    private int nEllamada = 0;
     //hace falta mas metodos porque no todos leen los mensajes de la misma forma dice el profe
 
     public Document getMensaje() {
@@ -30,6 +31,11 @@ public class Slot {
         //System.out.println(Mensaje.getFirstChild());
 
         xmlBuffer.add(Mensaje);
+        nEllamada++;
+    }
+    public int devolverNConjuntos() {
+        //System.out.println(xmlSalida.size());
+        return nEllamada;
     }
     
     

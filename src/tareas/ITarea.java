@@ -6,11 +6,6 @@ package tareas;
 
 import org.w3c.dom.Document;
 
-
-/**
- *
- * @author Cristian
- */
 public interface ITarea {
 
     public void realizarTarea();
