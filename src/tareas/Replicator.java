@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Replicator implements ITarea{
 
     Document xmlEntrada;
-    int numSalidas = 0;
+    int numSalidas = 2;
     ArrayList<Document> xmlSalida = new ArrayList<>();
 
     @Override

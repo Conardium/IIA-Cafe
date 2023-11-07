@@ -31,7 +31,7 @@ public class Slot {
         //System.out.println(Mensaje.getFirstChild());
 
         xmlBuffer.add(Mensaje);
-        nEllamada++;
+        nEllamada = xmlBuffer.size();
     }
     public int devolverNConjuntos() {
         //System.out.println(xmlSalida.size());

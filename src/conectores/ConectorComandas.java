@@ -30,7 +30,7 @@ public class ConectorComandas extends Conector {
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document MensajeXML = builder.parse(ficheroComandas);
                 xmlFiles.add(MensajeXML);
-                
+
             } catch (Exception ex) {
                 System.out.println("Error en el inicio de ConectorComandas");
             }

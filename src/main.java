@@ -5,6 +5,7 @@ import slot.Slot;
 import tareas.Distributor;
 import tareas.Replicator;
 import tareas.Splitter;
+import tareas.Translator;
 
 /**
  *
@@ -15,7 +16,8 @@ public class main {
     
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
-    static Puerto PInicial = new Puerto();
+    static Puerto P_Inicial = new Puerto();
+    static Puerto P_ES_Cold = new Puerto();
     
     //************Slots**********//
     static Slot SInicial = new Slot();
@@ -43,6 +45,8 @@ public class main {
     static Splitter TSplitter = new Splitter();
     static Distributor TDistributor = new Distributor();
     static Replicator TReplicator = new Replicator();
+    static Translator TTranslatorF = new Translator();
+    static Translator TTranslatorC = new Translator();
     
     
     //main//
@@ -93,7 +97,12 @@ public class main {
                 S4H.setMensaje(TReplicator.setMSJslot(0));
                 S5H.setMensaje(TReplicator.setMSJslot(0));
             }*/
-            //Actua el Translator
+            //=====> Actua el Translator
+            for (int j = 0; j < S4C.devolverNConjuntos(); j++){
+                TTranslatorF.getMSJslot(S4C.getMensaje());
+                TTranslatorF.realizarTarea();
+                S6C.setMensaje(TTranslatorF.setMSJslot(0));
+            }
         }
 
         // ===== PARA COMPROBAR SI LA INFORMACION DEL DOCUMENTO LLEGA BIEN ======

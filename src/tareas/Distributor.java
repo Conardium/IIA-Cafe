@@ -19,13 +19,13 @@ public class Distributor implements ITarea {
         if(xmlEntrada.getFirstChild().getLastChild().getLastChild().getTextContent().compareTo("cold") == 0)
         {
             xmlCold.add(xmlEntrada);
-            nEcold++;
+            nEcold = xmlCold.size();
         }
         //Si es hot
         else if(xmlEntrada.getFirstChild().getLastChild().getLastChild().getTextContent().compareTo("hot") == 0)
         {
             xmlHot.add(xmlEntrada);
-            nEhot++;
+            nEhot = xmlHot.size();
         }
     }
 
