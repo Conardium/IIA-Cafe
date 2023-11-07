@@ -31,7 +31,6 @@ public class Distributor implements ITarea {
 
     @Override
     public void getMSJslot(Document xmlE) {
-
         xmlEntrada = xmlE;
     }
 
@@ -65,7 +64,6 @@ public class Distributor implements ITarea {
     }
 
     public int devolverNHot() {
-
         return nEhot;
     }
 

@@ -8,7 +8,7 @@ import org.w3c.dom.Document;
  *
  * @author Cristian
  */
-public abstract class  Conectores {
+public abstract class Conector {
     
     ArrayList<Document> xmlFiles;
     

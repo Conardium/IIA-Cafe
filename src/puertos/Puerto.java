@@ -21,7 +21,6 @@ public class Puerto {
     }
 
     public void setPuerto(Document xmlFile) {
-        
         this.xmlFile = xmlFile;
     }
     

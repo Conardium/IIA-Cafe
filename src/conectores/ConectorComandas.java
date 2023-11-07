@@ -14,7 +14,7 @@ import org.w3c.dom.Document;
  *
  * @author Cristian
  */
-public class ConectorComandas extends Conectores{
+public class ConectorComandas extends Conector {
 
 
     public ConectorComandas() {

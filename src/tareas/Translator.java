@@ -1,0 +1,72 @@
+package tareas;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
+public class Translator implements ITarea {
+
+    Document xmlEntrada;
+    Document xmlSalida;
+
+    @Override
+    public void realizarTarea() {
+        try{
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+            //Pillamos el nombre
+            XPathExpression expressionXpath2 = xPath.compile("//cafe_order//drink//name");
+            String nameOrder = (String) expressionXpath2.evaluate(xmlEntrada, XPathConstants.STRING);
+
+            //************************************************************************
+
+            //Crear un documento XML
+            Document xmlOut = dBuilder.newDocument();
+
+            //Crear un elemento Padre (SQL)
+            Node NodoPadre = xmlOut.createElement("SQL");
+            xmlOut.appendChild(NodoPadre);
+
+            //El nodo con la sentenciasql
+            Node sentence = xmlOut.createElement("sentence");
+
+            //"EXIST" SERÁ UN BOOLEANO (0 o 1) PARA INDICAR SI HAY EXISTENCIAS
+            sentence.appendChild(xmlOut.createTextNode("SELECT name, exist FROM Bebidas \n" +
+                    "WHERE name =" + nameOrder + ";"));
+            NodoPadre.appendChild(sentence);
+
+            //EJEMPLO DEL CONTENIDO DEL NUEVO DOCUMENTO XML
+            /*<SQL>
+                <order_id>...</order_id>
+                <sentence>"SELECT name, exist FROM Bebidas \n" + "WHERE name =" + nameOrder + ";"</sentence>
+              </SQL>*/
+
+            //Guardo en xmlSalida
+            xmlSalida = xmlOut;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void getMSJslot(Document xmlE) {
+        xmlEntrada = xmlE;
+    }
+
+    @Override
+    public Document setMSJslot(int v) {
+        return xmlSalida;
+    }
+}
