@@ -1,5 +1,5 @@
 
-import conectores.ConectorComandas;
+import conectores.*;
 import puertos.Puerto;
 import slot.Slot;
 import tareas.Distributor;
@@ -16,6 +16,7 @@ public class main {
     
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
+    static ConectorBarman cBf = new ConectorBarman();
     static Puerto P_Inicial = new Puerto();
     static Puerto P_ES_Cold = new Puerto();
     
@@ -97,12 +98,24 @@ public class main {
                 S4H.setMensaje(TReplicator.setMSJslot(0));
                 S5H.setMensaje(TReplicator.setMSJslot(0));
             }*/
-            //=====> Actua el Translator
+            //=====> Actua el Translator Frio
             for (int j = 0; j < S4C.devolverNConjuntos(); j++){
                 TTranslatorF.getMSJslot(S4C.getMensaje());
                 TTranslatorF.realizarTarea();
                 S6C.setMensaje(TTranslatorF.setMSJslot(0));
             }
+            //========> Puerto lee mensajes frios, el conector los lee y los transforma
+            for (int j = 0; j < S6C.devolverNConjuntos(); j++) {
+                P_ES_Cold.setPuerto(S6C.getMensaje());
+                cBf.escribirMensaje(P_ES_Cold.getPuerto());
+                cBf.busquedaBD();
+            }
+            //========> Conector escribe mensajes frios, el puerto los pasa al slot 
+            for (int j = 0; j < cBf.getTotal(); j++) {
+                P_ES_Cold.setPuerto(cBf.devolverSQL());
+                S7C.setMensaje(P_ES_Cold.getPuerto());
+            }
+            
         }
 
         // ===== PARA COMPROBAR SI LA INFORMACION DEL DOCUMENTO LLEGA BIEN ======

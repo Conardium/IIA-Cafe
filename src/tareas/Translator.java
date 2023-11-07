@@ -33,23 +33,16 @@ public class Translator implements ITarea {
             //Crear un documento XML
             Document xmlOut = dBuilder.newDocument();
 
-            //Crear un elemento Padre (SQL)
-            Node NodoPadre = xmlOut.createElement("SQL");
-            xmlOut.appendChild(NodoPadre);
-
             //El nodo con la sentenciasql
             Node sentence = xmlOut.createElement("sentence");
 
             //"EXIST" SERÁ UN BOOLEANO (0 o 1) PARA INDICAR SI HAY EXISTENCIAS
             sentence.appendChild(xmlOut.createTextNode("SELECT name, exist FROM Bebidas \n" +
                     "WHERE name =" + nameOrder + ";"));
-            NodoPadre.appendChild(sentence);
+            xmlOut.appendChild(sentence);
 
             //EJEMPLO DEL CONTENIDO DEL NUEVO DOCUMENTO XML
-            /*<SQL>
-                <order_id>...</order_id>
-                <sentence>"SELECT name, exist FROM Bebidas \n" + "WHERE name =" + nameOrder + ";"</sentence>
-              </SQL>*/
+            /*<sentence>"SELECT name, exist FROM Bebidas \n" + "WHERE name =" + nameOrder + ";"</sentence>*/
 
             //Guardo en xmlSalida
             xmlSalida = xmlOut;
