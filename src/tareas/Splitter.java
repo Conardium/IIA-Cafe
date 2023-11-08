@@ -32,6 +32,8 @@ public class Splitter implements ITarea {
 
             //Pillamos todos los nodo hot
             NodeList hotNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='hot']").evaluate(xmlEntrada, XPathConstants.NODESET);
+            //Pillamos todos los nodo cold
+            NodeList coldNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='cold']").evaluate(xmlEntrada, XPathConstants.NODESET);
 
             //Hot
             for (int i = 0; i < hotNodeList.getLength(); i++) {
@@ -47,6 +49,9 @@ public class Splitter implements ITarea {
                 Node id = xmlOut.createElement("order_id");
                 id.appendChild(xmlOut.createTextNode(numOrder));
                 NodoPadre.appendChild(id);
+                //Mi contexto: Número de Trozos
+                Node size = xmlOut.createElement("size");
+                size.appendChild(xmlOut.createTextNode(String.valueOf(hotNodeList.getLength() + coldNodeList.getLength())));
 
                 //El nodo con el hot
                 Node nodoHot = xmlOut.importNode(hotNodeList.item(i), true);
@@ -56,9 +61,6 @@ public class Splitter implements ITarea {
                 xmlSalida.add(xmlOut);
                 nEllamada = xmlSalida.size();
             }
-
-            //Pillamos todos los nodo cold
-            NodeList coldNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='cold']").evaluate(xmlEntrada, XPathConstants.NODESET);
 
             //Cold
             for (int i = 0; i < coldNodeList.getLength(); i++) {
@@ -74,6 +76,9 @@ public class Splitter implements ITarea {
                 Node id = xmlOut.createElement("order_id");
                 id.appendChild(xmlOut.createTextNode(numOrder));
                 NodoPadre.appendChild(id);
+                //Mi contexto: Número de Trozos
+                Node size = xmlOut.createElement("size");
+                size.appendChild(xmlOut.createTextNode(String.valueOf(hotNodeList.getLength() + coldNodeList.getLength())));
 
                 //Pongo el hijo cold
                 Node nodoCold = xmlOut.importNode(coldNodeList.item(i), true);
