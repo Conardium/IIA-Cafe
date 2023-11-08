@@ -1,0 +1,8 @@
+INSERT INTO Bebidas (name, exist) VALUES ('chocolate', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('cafe', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('coca-cola', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('te', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('tonica', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('guarana', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('tila', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('cerveza', 1);

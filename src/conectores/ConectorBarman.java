@@ -39,7 +39,8 @@ public class ConectorBarman extends Conector {
             xmlOut.appendChild(NodoPadre);
 
             //El nombre
-            Node name = xmlOut.createElement("name");
+            Node name = xmlOut.createElement("" +
+                    "");
             name.appendChild(xmlOut.createTextNode(bebidaNombre));
             NodoPadre.appendChild(name);
 

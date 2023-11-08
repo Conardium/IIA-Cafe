@@ -2,10 +2,7 @@
 import conectores.*;
 import puertos.Puerto;
 import slot.Slot;
-import tareas.Distributor;
-import tareas.Replicator;
-import tareas.Splitter;
-import tareas.Translator;
+import tareas.*;
 
 /**
  *
@@ -17,7 +14,9 @@ public class main {
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
     static ConectorBarman cBf = new ConectorBarman();
+    static ConectorCamarero cCam = new ConectorCamarero();
     static Puerto P_Inicial = new Puerto();
+    static Puerto P_Final = new Puerto();
     static Puerto P_ES_Cold = new Puerto();
     
     //************Slots**********//
@@ -47,8 +46,11 @@ public class main {
     static Distributor TDistributor = new Distributor();
     static Replicator TReplicator = new Replicator();
     static Translator TTranslatorF = new Translator();
-    static Translator TTranslatorC = new Translator();
-    
+//    static Translator TTranslatorC = new Translator();
+    static Correlator TCorrelator = new Correlator();
+    static Content_Enricher TCEnricher = new Content_Enricher();
+    static Merger TMerger = new Merger();
+    static Aggregator TAggregator = new Aggregator();
     
     //main//
     public static void main(String[] args) {
@@ -115,7 +117,39 @@ public class main {
                 P_ES_Cold.setPuerto(cBf.devolverSQL());
                 S7C.setMensaje(P_ES_Cold.getPuerto());
             }
-            
+
+            //=====> Actua el Correlator Frio
+            for (int j = 0; j < S5C.devolverNConjuntos(); j++) { //puede ser tambien S7C.devolverNConjuntos()
+                TCorrelator.getMSJslot(S5C.getMensaje());
+                TCorrelator.realizarTarea();
+                S8C.setMensaje(TCorrelator.setMSJslot(1));
+                S9C.setMensaje(TCorrelator.setMSJslot(2));
+            }
+
+            //=====> Actua el Content Enricher Frio
+            for (int j = 0; j < S8C.devolverNConjuntos(); j++){
+                TCEnricher.getMSJslot(S8C.getMensaje());
+                TCEnricher.realizarTarea();
+                S10C.setMensaje(TCEnricher.setMSJslot(0));
+            }
+
+            //=====> Actua el Merger
+            for (int j = 0; j < S11.devolverNConjuntos(); j++){
+                TMerger.getMSJslot(S11.getMensaje());
+                TMerger.realizarTarea();
+                S11.setMensaje(TMerger.setMSJslot(0));
+            }
+
+            //=====> Actua el Aggregator
+            TAggregator.getMSJslot(S10C.getMensaje());
+            TAggregator.realizarTarea();
+            SFinal.setMensaje(TAggregator.setMSJslot(0));
+
+            //=====> Escribimos los Mensajes en el puerto Final del 1 al 9
+            P_Final.setPuerto(SFinal.getMensaje());
+
+            //=====> El conector Camarero recoge los datos del puerto Final
+            //...
         }
 
         // ===== PARA COMPROBAR SI LA INFORMACION DEL DOCUMENTO LLEGA BIEN ======
