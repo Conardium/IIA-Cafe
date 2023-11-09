@@ -50,9 +50,9 @@ public class ConectorCamarero extends Conector {
 
     }
 
-    public boolean CargarBD{
+    public boolean CargarBD(){
 
 
-
+    return true;
     }
 }

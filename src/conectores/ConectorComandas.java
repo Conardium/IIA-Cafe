@@ -19,7 +19,6 @@ public class ConectorComandas extends Conector {
 
     public ConectorComandas() {
 
-        xmlFiles = new ArrayList<>();
         String direccionAux = System.getProperty("user.dir") + "\\src\\comandas\\order";
         System.out.println(direccionAux);
 

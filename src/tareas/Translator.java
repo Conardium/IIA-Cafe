@@ -38,7 +38,7 @@ public class Translator implements ITarea {
 
             //"EXIST" SERÁ UN BOOLEANO (0 o 1) PARA INDICAR SI HAY EXISTENCIAS
             sentence.appendChild(xmlOut.createTextNode("SELECT name, exist FROM Bebidas \n" +
-                    "WHERE name =" + nameOrder + ";"));
+                    "WHERE name = " + nameOrder + ";"));
             xmlOut.appendChild(sentence);
 
             //EJEMPLO DEL CONTENIDO DEL NUEVO DOCUMENTO XML

@@ -48,7 +48,7 @@ public abstract class Conector {
     }
 
 
-    ArrayList<Document> xmlFiles;
+    ArrayList<Document> xmlFiles = new ArrayList();
     
     public Document leerMensaje() {
         

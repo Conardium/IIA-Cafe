@@ -18,9 +18,17 @@ public class ConectorBarman extends Conector {
 
     public void busquedaBD() {
         try {
-            Document xmlAux = leerMensaje();
+            Document xmlAux = xmlFiles.remove(0);
             
+            /*POR AHORA*/
             String bebidaNombre = xmlAux.getFirstChild().getTextContent();
+            
+            String[] partes = bebidaNombre.split("=");
+            
+            bebidaNombre= partes[1].trim();
+            
+            bebidaNombre = bebidaNombre.substring(0, bebidaNombre.length() - 1);
+            /****/
             
             /***********LO QUE DEVOLVERÁ LA BD**********
                 <result>
@@ -39,8 +47,7 @@ public class ConectorBarman extends Conector {
             xmlOut.appendChild(NodoPadre);
 
             //El nombre
-            Node name = xmlOut.createElement("" +
-                    "");
+            Node name = xmlOut.createElement("name");
             name.appendChild(xmlOut.createTextNode(bebidaNombre));
             NodoPadre.appendChild(name);
 
@@ -49,7 +56,7 @@ public class ConectorBarman extends Conector {
             exits.appendChild(xmlOut.createTextNode("1"));
             NodoPadre.appendChild(exits);
 
-            xmlSQL.add(xmlAux);
+            xmlSQL.add(xmlOut);
             total = xmlSQL.size();
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +64,20 @@ public class ConectorBarman extends Conector {
 
     }
 
+    @Override
+    public void escribirMensaje(Document Mensaje) {
+        
+       xmlFiles.add(Mensaje);
+    }
+    
+    @Override
+    public Document leerMensaje() {
+        
+        return devolverSQL();
+    }
+    
     public Document devolverSQL() {
+        
         return xmlSQL.remove(0);
     }
 

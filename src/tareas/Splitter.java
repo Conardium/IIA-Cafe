@@ -49,10 +49,12 @@ public class Splitter implements ITarea {
                 Node id = xmlOut.createElement("order_id");
                 id.appendChild(xmlOut.createTextNode(numOrder));
                 NodoPadre.appendChild(id);
+                
                 //Mi contexto: Número de Trozos
                 Node size = xmlOut.createElement("size");
                 size.appendChild(xmlOut.createTextNode(String.valueOf(hotNodeList.getLength() + coldNodeList.getLength())));
-
+                NodoPadre.appendChild(size);
+                
                 //El nodo con el hot
                 Node nodoHot = xmlOut.importNode(hotNodeList.item(i), true);
                 NodoPadre.appendChild(nodoHot);
@@ -76,10 +78,12 @@ public class Splitter implements ITarea {
                 Node id = xmlOut.createElement("order_id");
                 id.appendChild(xmlOut.createTextNode(numOrder));
                 NodoPadre.appendChild(id);
+                
                 //Mi contexto: Número de Trozos
                 Node size = xmlOut.createElement("size");
                 size.appendChild(xmlOut.createTextNode(String.valueOf(hotNodeList.getLength() + coldNodeList.getLength())));
-
+                NodoPadre.appendChild(size);
+                
                 //Pongo el hijo cold
                 Node nodoCold = xmlOut.importNode(coldNodeList.item(i), true);
                 NodoPadre.appendChild(nodoCold);
@@ -100,11 +104,11 @@ public class Splitter implements ITarea {
     @Override
     public Document setMSJslot(int v) {
         //Muestro el MSJ
-        System.out.println(xmlSalida.get(0).getFirstChild().getFirstChild().getNodeName() + " "
+        /*System.out.println(xmlSalida.get(0).getFirstChild().getFirstChild().getNodeName() + " "
                 + xmlSalida.get(0).getFirstChild().getFirstChild().getTextContent() + " "
                 + xmlSalida.get(0).getFirstChild().getLastChild().getLastChild().getNodeName() + " "
                 + xmlSalida.get(0).getFirstChild().getLastChild().getLastChild().getTextContent());
-
+                */
         return xmlSalida.remove(0);
     }
 

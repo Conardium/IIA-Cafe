@@ -23,44 +23,48 @@ public class Correlator implements ITarea {
     ArrayList<Document> xmlContextE = new ArrayList<>();
     ArrayList<Document> xmlContextS = new ArrayList<>();
 
+    private int nEllamada = 0;
+
     @Override
     public void realizarTarea() {
 
-        int Body = -1, Context = -1;
-        try {
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            for (int i = 0; i < xmlContextE.size(); i++) {
+        for (int a = 0; a < xmlContextE.size(); a++) {
+            int Body = -1, Context = -1;
+            try {
+                XPath xPath = XPathFactory.newInstance().newXPath();
+                for (int i = 0; i < xmlContextE.size(); i++) {
 
-                // Evaluar la expresión XPath para obtener el contenido de <name> del contexto
-                XPathExpression exprC = xPath.compile("//result//name");
-                String nombreContext = (String) exprC.evaluate(xmlContextE.get(i), XPathConstants.STRING);
+                    // Evaluar la expresión XPath para obtener el contenido de <name> del contexto
+                    XPathExpression exprC = xPath.compile("//result//name");
+                    String nombreContext = (String) exprC.evaluate(xmlContextE.get(i), XPathConstants.STRING);
 
-                for (int j = 0; j < xmlBodyE.size(); j++) {
+                    for (int j = 0; j < xmlBodyE.size(); j++) {
 
-                    // Evaluar la expresión XPath para obtener el contenido de <name> del body
-                    XPathExpression exprB = xPath.compile("//cafe_order//drink//name");
-                    String nombreBody = (String) exprB.evaluate(xmlBodyE.get(i), XPathConstants.STRING);
+                        // Evaluar la expresión XPath para obtener el contenido de <name> del body
+                        XPathExpression exprB = xPath.compile("//cafe_order//drink//name");
+                        String nombreBody = (String) exprB.evaluate(xmlBodyE.get(i), XPathConstants.STRING);
 
-                    //Si son iguales los guardo y me salgo de los bucles
-                    if (nombreContext.equalsIgnoreCase(nombreBody)) {
+                        //Si son iguales los guardo y me salgo de los bucles
+                        if (nombreContext.equalsIgnoreCase(nombreBody)) {
 
-                        Context = i;
-                        Body = j;
+                            Context = i;
+                            Body = j;
 
-                        i = xmlContextE.size();
-                        j = xmlBodyE.size();
+                            i = xmlContextE.size();
+                            j = xmlBodyE.size();
+                        }
                     }
                 }
+            } catch (Exception e) {
+
+                e.printStackTrace();
             }
-        } catch (Exception e) {
 
-            e.printStackTrace();
+            //Colocamos en su respectiva posición cada xml
+            xmlContextS.add(xmlContextE.remove(Context));
+            xmlBodyS.add(xmlBodyE.remove(Body));
+            nEllamada = xmlContextS.size();
         }
-
-        //Colocamos en su respectiva posición cada xml
-        xmlContextS.add(xmlContextE.remove(Context));
-        xmlBodyS.add(xmlBodyE.remove(Body));
-
     }
 
     @Override
@@ -83,6 +87,11 @@ public class Correlator implements ITarea {
         } else {
             return null;
         }
+    }
+
+    public int devolverNConjuntos() {
+        //System.out.println(xmlSalida.size());
+        return nEllamada;
     }
 
 }

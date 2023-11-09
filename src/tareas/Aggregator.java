@@ -39,7 +39,7 @@ public class Aggregator implements ITarea{
             xmlUnir.add(xmlEntrada.get(contador));
             int id = Integer.parseInt(xmlEntrada.get(contador).getFirstChild().getFirstChild().getTextContent());
             int num = Integer.parseInt(xmlEntrada.get(contador)
-                    .getFirstChild().getFirstChild().getNextSibling().getTextContent());
+                    .getFirstChild().getChildNodes().item(1).getTextContent());
             id_Unir = String.valueOf(id);//Para la cabecera
 
             //A partir del siguiente empezamos a buscar
@@ -83,9 +83,9 @@ public class Aggregator implements ITarea{
                 NodoPadre.appendChild(drinks);
 
                 //Pillamos todos los Nodos
-                for (int i = 0; i < contadorXMLs; i++) {
-                    NodeList NodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink").evaluate(xmlUnir.get(i), XPathConstants.NODESET);
-                    Node nodo = xmlOut.importNode(NodeList.item(i), true);
+                for (int i = 0; i < contadorXMLs; i++) {//FALLA
+                    Node nodoAux = (Node) xPath.compile("//cafe_order//drinks//drink").evaluate(xmlUnir.get(0), XPathConstants.NODE);
+                    Node nodo = xmlOut.importNode(nodoAux.getChildNodes().item(i), true);
                     drinks.appendChild(nodo);
                     //Borra del entrada
                     xmlEntrada.remove(xmlUnir.get(i));
@@ -111,4 +111,8 @@ public class Aggregator implements ITarea{
         return xmlSalida;
     }
     
+    public int devolverNConjuntos()
+    {
+        return xmlEntrada.size();
+    }
 }
