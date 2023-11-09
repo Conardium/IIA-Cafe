@@ -82,6 +82,11 @@ public class ConectorBarman extends Conector {
     }
 
     public int getTotal() {
+        
+        if(xmlSQL.size() == 0)
+        {
+            total = 0;
+        }
         return total;
     }
     

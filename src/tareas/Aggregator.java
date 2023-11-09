@@ -17,7 +17,7 @@ import javax.xml.xpath.*;
  *
  * @author Cristian
  */
-public class Aggregator implements ITarea{
+public class Aggregator implements ITarea {
 
     ArrayList<Document> xmlEntrada = new ArrayList<>();
     ArrayList<Document> xmlUnir = new ArrayList<>();
@@ -32,18 +32,21 @@ public class Aggregator implements ITarea{
         String id_Unir = "0";
 
         //Intentamos recoger todos los XML que sean del mismo id hasta su tamaño
-        while(contador < xmlEntrada.size() && encontrado == false){//Mientras el contador sea menor a todos los que hay
+        while (contador < xmlEntrada.size() && encontrado == false) {//Mientras el contador sea menor a todos los que hay
             xmlUnir = new ArrayList<>();//Reinicio la lista
+            contador = 0;
+            contadorXMLs = 1;
 
             //meto el primero en la lista y pillo su id y el numero de trozos
             xmlUnir.add(xmlEntrada.get(contador));
+
             int id = Integer.parseInt(xmlEntrada.get(contador).getFirstChild().getFirstChild().getTextContent());
             int num = Integer.parseInt(xmlEntrada.get(contador)
                     .getFirstChild().getChildNodes().item(1).getTextContent());
             id_Unir = String.valueOf(id);//Para la cabecera
 
             //A partir del siguiente empezamos a buscar
-            int j = contador+1;
+            int j = contador + 1;
             //Si el contadorXML es igual al numero pues salimos, o si nos quedamos sin entrada
             while (j < xmlEntrada.size() && contadorXMLs < num) {
                 //Si es del mismo id lo agregamos
@@ -54,7 +57,8 @@ public class Aggregator implements ITarea{
                 j++;
             }
             //Encontro un conjunto bueno
-            if(contadorXMLs == num){
+            if (contadorXMLs == num) {
+
                 encontrado = true;
             }
             //Sigo buscando
@@ -82,11 +86,16 @@ public class Aggregator implements ITarea{
                 Node drinks = xmlOut.createElement("drinks");
                 NodoPadre.appendChild(drinks);
 
+
                 //Pillamos todos los Nodos
                 for (int i = 0; i < contadorXMLs; i++) {//FALLA
-                    Node nodoAux = (Node) xPath.compile("//cafe_order//drinks//drink").evaluate(xmlUnir.get(0), XPathConstants.NODE);
-                    Node nodo = xmlOut.importNode(nodoAux.getChildNodes().item(i), true);
-                    drinks.appendChild(nodo);
+                    //Pillamos la orden
+                    XPathExpression expression = xPath.compile("//cafe_order//drink");
+                    Node nodoAux = (Node) expression.evaluate(xmlUnir.get(i), XPathConstants.NODE);
+                    for (int j = 0; j < nodoAux.getChildNodes().getLength(); j++) { 
+                        Node nodo = xmlOut.importNode(nodoAux.getChildNodes().item(j), true);
+                        drinks.appendChild(nodo);
+                    }
                     //Borra del entrada
                     xmlEntrada.remove(xmlUnir.get(i));
                 }
@@ -110,9 +119,8 @@ public class Aggregator implements ITarea{
 
         return xmlSalida;
     }
-    
-    public int devolverNConjuntos()
-    {
+
+    public int devolverNConjuntos() {
         return xmlEntrada.size();
     }
 }
