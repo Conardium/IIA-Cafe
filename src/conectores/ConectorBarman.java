@@ -25,17 +25,17 @@ public class ConectorBarman extends Conector {
             String bebidaNombre = "";
             int existe = 0;
 
-            /*POR AHORA*/
-            /*bebidaNombre = xmlAux.getFirstChild().getTextContent();
-
+            bebidaNombre = xmlAux.getFirstChild().getTextContent();
+            
             String[] partes = bebidaNombre.split("=");
 
             bebidaNombre = partes[1].trim();
 
             bebidaNombre = bebidaNombre.substring(0, bebidaNombre.length() - 1);
-            */
+            
 
-            String consulta = "SELECT * FROM " + Table;
+            String consulta = "SELECT NAME,EXIST FROM " + Table +
+                    " WHERE NAME = " + bebidaNombre ;
             PreparedStatement ps = getConexion().prepareStatement(consulta);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

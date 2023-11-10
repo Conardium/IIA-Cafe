@@ -4,17 +4,16 @@
  */
 package conectores;
 
-import java.io.File;
-import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.*;
-import tareas.Translator;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,7 +21,7 @@ import java.sql.ResultSet;
  */
 public class ConectorComandas extends Conector {
 
-    int id=0;
+    int id = 0;
     String Mensaje = "";
 
     /*public ConectorComandas() {
@@ -44,11 +43,10 @@ public class ConectorComandas extends Conector {
 
         }
     }*/
-
     public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-                            String password) {
+            String password) {
         try {
-            Conexion(sgbd, ip,  service_bd,  usuario, password);
+            Conexion(sgbd, ip, service_bd, usuario, password);
 
             String consulta = "SELECT * FROM " + NombreTabla;
             PreparedStatement ps = getConexion().prepareStatement(consulta);
@@ -62,34 +60,33 @@ public class ConectorComandas extends Conector {
             desconexion();
 
             return true;
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println("Error en el Conector Comandas");
+            System.out.println(ex.getMessage());
             return false;
         }
     }
 
-    public void TransformarStringXML(){
+    public void TransformarStringXML() {
 
         try {
-        ///Crear un documento XML
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document xmlOut = dBuilder.parse(new org.xml.sax.InputSource(new java.io.StringReader(Mensaje)));
+            ///Crear un documento XML
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document xmlOut = dBuilder.parse(new org.xml.sax.InputSource(new java.io.StringReader(Mensaje)));
 
-        StringToXML(xmlOut);
+            StringToXML(xmlOut);
 
-        xmlFiles.add(xmlOut);
+            xmlFiles.add(xmlOut);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-
     public Document leerMensaje() {
 
         return xmlFiles.remove(0);
     }
-
 
     private static void StringToXML(Node node) {
         NodeList childNodes = node.getChildNodes();

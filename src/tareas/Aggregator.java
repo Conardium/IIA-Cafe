@@ -93,10 +93,8 @@ public class Aggregator implements ITarea {
                     //Pillamos la orden
                     XPathExpression expression = xPath.compile("//cafe_order//drink");
                     Node nodoAux = (Node) expression.evaluate(xmlUnir.get(i), XPathConstants.NODE);
-                    for (int j = 0; j < nodoAux.getChildNodes().getLength(); j++) { 
-                        Node nodo = xmlOut.importNode(nodoAux.getChildNodes().item(j), true);
-                        drinks.appendChild(nodo);
-                    }
+                    Node drink = xmlOut.importNode(nodoAux, true);
+                    drinks.appendChild(drink);
                     //Borra del entrada
                     xmlEntrada.remove(xmlUnir.get(i));
                 }

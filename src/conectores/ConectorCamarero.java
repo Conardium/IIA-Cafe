@@ -1,7 +1,7 @@
 package conectores;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -9,7 +9,7 @@ import org.w3c.dom.NodeList;
 public class ConectorCamarero extends Conector {
 
     int id = 0;
-    
+
     public String convertirXMLtoString() {
 
         Node nPadre = xmlFiles.get(0).getDocumentElement();
@@ -18,10 +18,10 @@ public class ConectorCamarero extends Conector {
 
         // Nodo Padre
         System.out.println("\n*************************PUERTO FINAL**************************");
-        mostrarNodos(nPadre.getChildNodes(), mensaje);
+        mostrarNodos(nPadre.getChildNodes(), mensaje, 1);
         String mensajeFinal = "<" + nPadre.getNodeName() + ">"
                 + mensaje.toString()
-                + "</" + nPadre.getNodeName() + ">";
+                + "\n</" + nPadre.getNodeName() + ">";
         //Cogemos los Nodos del padre recursivamente
         System.out.println(mensajeFinal);
         System.out.println("\n*************************------------**************************");
@@ -29,7 +29,14 @@ public class ConectorCamarero extends Conector {
         return mensajeFinal;
     }
 
-    public void mostrarNodos(NodeList nHijos, StringBuilder mensaje) {
+    public void mostrarNodos(NodeList nHijos, StringBuilder mensaje, int paso) {
+
+        String salto = "\n";
+
+        for (int i = 0; i < paso; i++) {
+
+            salto = salto + "\t";
+        }
 
         for (int i = 0; i < nHijos.getLength(); i++) {
             Node nAux = nHijos.item(i);
@@ -37,16 +44,23 @@ public class ConectorCamarero extends Conector {
             boolean esTexto = nAux.getNodeName().startsWith("#");
 
             if (!esTexto) {
-                mensaje.append(" ").append("<").append(nAux.getNodeName()).append(">");
+                mensaje.append(" ").append(salto).append("<").append(nAux.getNodeName()).append(">");
+                if (nAux.getNodeName().contains("id")) {
+                    id = Integer.parseInt(nAux.getTextContent());
+                }
             }
             if (esTexto) {
                 mensaje.append(" ").append(nAux.getTextContent());
             }
             if (!esTexto) {
                 if (nAux.getChildNodes() != null) {//Si tiene hijos los mostramos 
-                    mostrarNodos(nAux.getChildNodes(), mensaje);
+                    mostrarNodos(nAux.getChildNodes(), mensaje, paso + 1);
                 }
-                mensaje.append(" ").append("</").append(nAux.getNodeName()).append(">");
+                if (nAux.getChildNodes().getLength() > 1) {
+                    mensaje.append(" ").append(salto).append("</").append(nAux.getNodeName()).append(">");
+                } else {
+                    mensaje.append(" ").append("</").append(nAux.getNodeName()).append(">");
+                }
             }
 
         }
@@ -54,16 +68,16 @@ public class ConectorCamarero extends Conector {
     }
 
     public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-                            String password) {
+            String password) {
         try {
-            Conexion( sgbd, ip,  service_bd,  usuario, password);
+            Conexion(sgbd, ip, service_bd, usuario, password);
 
             String Mensaje = convertirXMLtoString();
-            
-            PreparedStatement ps = getConexion().prepareStatement("INSERT INTO" + NombreTabla + " VALUES "
+
+            PreparedStatement ps = getConexion().prepareStatement("INSERT INTO " + NombreTabla + " VALUES "
                     + "(?,?)");
             ps.setInt(1, id);
-            ps.setString(2, URL);
+            ps.setString(2, Mensaje);
             ps.executeUpdate();
 
             desconexion();
@@ -74,32 +88,31 @@ public class ConectorCamarero extends Conector {
             return false;
         }
     }
-
-    public boolean borrarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-                            String password) {
-        try {
-            Conexion( sgbd, ip,  service_bd,  usuario, password);
-
-            PreparedStatement ps = getConexion().prepareStatement("DELETE FROM" + NombreTabla);
-            ps.executeUpdate();
-
-            desconexion();
-
-            return true;
-        } catch (Exception ex) {
-            System.out.println("Error en Conector Camarero");
-            return false;
-        }
-    }
-
-
 
     public Document leerMensaje(String Table, String sgbd, String ip, String service_bd, String usuario,
-                                String password ) {
+            String password) {
 
         CargarBD(Table, sgbd, ip, service_bd, usuario,
                 password);
         return xmlFiles.remove(0);
+    }
+
+    //Usamos este metodo solo para las pruebas
+    public boolean borrarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
+            String password) {
+        try {
+            Conexion(sgbd, ip, service_bd, usuario, password);
+
+            PreparedStatement ps = getConexion().prepareStatement("DELETE FROM " + NombreTabla);
+            ps.executeUpdate();
+
+            desconexion();
+
+            return true;
+        } catch (Exception ex) {
+            System.out.println("Error en Conector Camarero");
+            return false;
+        }
     }
 
 }
