@@ -28,7 +28,8 @@ public abstract class Conector {
             URL = "jdbc:mariadb://" + ip + ":3306/" + service_bd;
         } else
         {
-            URL = "JavaDB";
+            URL = "jdbc:derby://" + ip + ":1527/" + service_bd;
+            //jdbc:derby://localhost:1527/IIA_Cafe
         }
 
         conn = DriverManager.getConnection(URL,usuario,password);

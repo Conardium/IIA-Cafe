@@ -14,16 +14,17 @@ public class ConectorBarman extends Conector {
     ArrayList<Document> xmlSQL = new ArrayList();
     int total;
 
-    public ConectorBarman() {
+    public void busquedaBD(String Table, String sgbd, String ip, String service_bd, String usuario,
+                           String password) {
 
-    }
-
-    public void busquedaBD(String Table) {
         try {
+            //Nos conectamos
+            Conexion( sgbd, ip,  service_bd,  usuario, password);
+
             Document xmlAux = xmlFiles.remove(0);
             String bebidaNombre = "";
             int existe = 0;
-            
+
             /*POR AHORA*/
             /*bebidaNombre = xmlAux.getFirstChild().getTextContent();
 
@@ -41,17 +42,18 @@ public class ConectorBarman extends Conector {
                 bebidaNombre = rs.getString(1);
                 existe = rs.getInt(2);
             }
+            //Nos desconectamos
+            desconexion();
 
             /**
-             * *********LO QUE DEVOLVERÁ LA BD
-             **********
+             * *********LO QUE DEVOLVERÁ LA BD**********
              * <result>
              * <name>Nombre bebida</name>
              * <exist>0 o 1</exist>
              * </result>
              */
-            
-            //Crear un documento XML
+
+            ///Crear un documento XML
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document xmlOut = dBuilder.newDocument();
@@ -72,7 +74,7 @@ public class ConectorBarman extends Conector {
 
             xmlSQL.add(xmlOut);
             total = xmlSQL.size();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }

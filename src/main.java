@@ -11,6 +11,12 @@ import tareas.*;
  */
 public class main {
 
+    //**********Datos BD*********//
+    static String sgbd = "derby", ip = "localhost", service_bd = "IIA_Cafe", usuario = "user_web", password = "web";
+
+    /*****************Tablas BD*****************/
+    static String TablaInicial = "MENSAJEENTRADA", TablaFinal = "MENSAJESALIDA", TablaBebidas = "BEBIDAS";
+
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
     static ConectorBarman cBC = new ConectorBarman();
@@ -55,7 +61,6 @@ public class main {
     static Correlator TCorrelatorH = new Correlator();
     static Content_Enricher TCEnricherC = new Content_Enricher();
     static Content_Enricher TCEnricherH = new Content_Enricher();
-
     static Merger TMerger = new Merger();
     static Aggregator TAggregator = new Aggregator();
 

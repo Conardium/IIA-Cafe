@@ -88,7 +88,8 @@ public class Aggregator implements ITarea {
 
 
                 //Pillamos todos los Nodos
-                for (int i = 0; i < contadorXMLs; i++) {//FALLA
+                for (int i = 0; i < contadorXMLs; i++) {
+
                     //Pillamos la orden
                     XPathExpression expression = xPath.compile("//cafe_order//drink");
                     Node nodoAux = (Node) expression.evaluate(xmlUnir.get(i), XPathConstants.NODE);

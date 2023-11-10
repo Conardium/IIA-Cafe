@@ -16,8 +16,10 @@ import org.w3c.dom.Document;
  */
 public class ConectorComandas extends Conector {
 
+    int id=0;
+    String Mensaje = "";
 
-    public ConectorComandas() {
+    /*public ConectorComandas() {
 
         String direccionAux = System.getProperty("user.dir") + "\\src\\comandas\\order";
         System.out.println(direccionAux);
@@ -36,7 +38,44 @@ public class ConectorComandas extends Conector {
 
         }
     }
-   
 
+    public void TransformarStringXML(){
+
+        try {
+        ///Crear un documento XML
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document xmlOut = dBuilder.parse(new org.xml.sax.InputSource(new java.io.StringReader(Mensaje)));
+
+        StringToXML(xmlOut);
+
+        xmlFiles.add(xmlOut);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public Document leerMensaje() {
+
+        return xmlFiles.remove(0);
+    }
+
+
+    private static void StringToXML(Node node) {
+        NodeList childNodes = node.getChildNodes();
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                StringToXML(childNode);
+            }
+        }
+
+        if (node instanceof Element) {
+            ((Element) node).normalize();
+        }
+    }
 
 }
