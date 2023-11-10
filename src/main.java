@@ -59,13 +59,18 @@ public class main {
     static Merger TMerger = new Merger();
     static Aggregator TAggregator = new Aggregator();
 
+    /*****************Tablas BD*****************/
+    static String TablaInicial = "MENSAJEENTRADA";
+    static String TableFinal = "MENSAJESALIDA";
+    static String TableBebidas = "BEBIDAS";
+    
     //main//
     public static void main(String[] args) {
 
         for (int i = 1; i <= 9; i++) {
 
             //=====> Escribimos los Mensajes en el puerto Inicial del 1 al 9
-            P_Inicial.setPuerto(CInicial.leerMensaje()); //FUNCIONANDO
+            P_Inicial.setPuerto(CInicial.leerMensaje(TablaInicial)); //FUNCIONANDO
             SInicial.setMensaje(P_Inicial.getPuerto()); //FUNCIONANDO
 
             //***************************************************//
@@ -150,7 +155,7 @@ public class main {
             for (int j = 0; j < S6C.devolverNConjuntos(); j++) {
                 P_ES_Cold.setPuerto(S6C.getMensaje());
                 cBC.escribirMensaje(P_ES_Cold.getPuerto());
-                cBC.busquedaBD();
+                cBC.busquedaBD(TableBebidas);
             }
             //========> Conector escribe mensajes cold, el puerto los pasa al slot 
             for (int j = 0; j < cBC.getTotal(); j++) {
@@ -162,7 +167,7 @@ public class main {
             for (int j = 0; j < S6H.devolverNConjuntos(); j++) {
                 P_ES_Hot.setPuerto(S6H.getMensaje());
                 cBH.escribirMensaje(P_ES_Hot.getPuerto());
-                cBH.busquedaBD();
+                cBH.busquedaBD(TableBebidas);
             }
             //========> Conector escribe mensajes hot, el puerto los pasa al slot 
             for (int j = 0; j < cBH.getTotal(); j++) {
@@ -268,7 +273,7 @@ public class main {
             //=====> El conector Camarero recoge los datos del puerto Final
             cCam.escribirMensaje(P_Final.getPuerto());
             // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
-            cCam.leerMensaje();
+            cCam.leerMensaje(TableFinal);
             
             System.out.println("Presiona Enter para continuar...");
             Scanner scanner = new Scanner(System.in);
