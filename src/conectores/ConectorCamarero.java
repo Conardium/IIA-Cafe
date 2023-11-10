@@ -1,58 +1,67 @@
 package conectores;
 
 import org.w3c.dom.Document;
-import puertos.Puerto;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-
-import org.w3c.dom.Element;
-
 public class ConectorCamarero extends Conector {
 
-    Puerto puerto = new Puerto();
-    String xmlFileName = String.valueOf(puerto.getPuerto());
+    public String convertirXMLtoString() {
 
-    String docfinal;
+        Node nPadre = xmlFiles.get(0).getDocumentElement();
 
-    public void convertirXMLtoString() {
-        try {
-            File archivoXML = new File(xmlFileName);
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = null;
+        StringBuilder mensaje = new StringBuilder();
 
-            builder = factory.newDocumentBuilder();
+        // Nodo Padre
+        System.out.println("\n*************************PUERTO FINAL**************************");
+        mostrarNodos(nPadre.getChildNodes(), mensaje);
+        String mensajeFinal = "<" + nPadre.getNodeName() + ">"
+                + mensaje.toString()
+                + "</" + nPadre.getNodeName() + ">";
+        //Cogemos los Nodos del padre recursivamente
+        System.out.println(mensajeFinal);
+        System.out.println("\n*************************------------**************************");
 
-            Document document = null;
-            document = builder.parse(archivoXML);
+        return mensajeFinal;
+    }
+
+    public void mostrarNodos(NodeList nHijos, StringBuilder mensaje) {
 
 
-            Element rootElement = document.getDocumentElement();
-            NodeList childNodes = rootElement.getChildNodes();
+        for (int i = 0; i < nHijos.getLength(); i++) {
+            Node nAux = nHijos.item(i);
 
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                Node node = childNodes.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    String tagName = element.getTagName();
-                    String textContent = element.getTextContent();
-                    docfinal = docfinal + textContent;
-                }
+            boolean esTexto = nAux.getNodeName().startsWith("#");
+
+            if (!esTexto) {
+                mensaje.append(" ").append("<").append(nAux.getNodeName()).append(">");
             }
-            CargarBD();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (esTexto) {
+                mensaje.append(" ").append(nAux.getTextContent());
+            }
+            if (!esTexto) {
+                if (nAux.getChildNodes() != null) {//Si tiene hijos los mostramos 
+                    mostrarNodos(nAux.getChildNodes(), mensaje);
+                }
+                mensaje.append(" ").append("</").append(nAux.getNodeName()).append(">");
+            }
+
         }
 
     }
 
-    public boolean CargarBD(){
+    public boolean CargarBD() {
 
+        String Mensaje = convertirXMLtoString();
 
-    return true;
+        return true;
     }
+
+    @Override
+    public Document leerMensaje() {
+
+        CargarBD();
+        return xmlFiles.remove(0);
+    }
+
 }

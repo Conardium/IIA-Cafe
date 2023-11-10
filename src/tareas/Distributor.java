@@ -59,11 +59,18 @@ public class Distributor implements ITarea {
     }
 
     public int devolverNCold() {
-
+        if(xmlCold.size() == 0)
+        {
+            nEcold = 0;
+        }
         return nEcold;
     }
 
     public int devolverNHot() {
+        if(xmlHot.size() == 0)
+        {
+            nEhot = 0;
+        }
         return nEhot;
     }
 

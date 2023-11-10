@@ -1,7 +1,6 @@
 
 import conectores.*;
 import java.util.Scanner;
-import org.w3c.dom.Document;
 import puertos.Puerto;
 import slot.Slot;
 import tareas.*;
@@ -165,7 +164,6 @@ public class main {
                 cBH.escribirMensaje(P_ES_Hot.getPuerto());
                 cBH.busquedaBD();
             }
-                        System.out.println("hot");
             //========> Conector escribe mensajes hot, el puerto los pasa al slot 
             for (int j = 0; j < cBH.getTotal(); j++) {
                 P_ES_Hot.setPuerto(cBH.devolverSQL());
@@ -181,7 +179,7 @@ public class main {
                 TCorrelatorC.getMSJslot(S7C.getMensaje());
             }
             TCorrelatorC.realizarTarea();
-            System.out.println(TCorrelatorC.devolverNConjuntos());
+
             for (int j = 0; j < TCorrelatorC.devolverNConjuntos(); j++) {
                 S8C.setMensaje(TCorrelatorC.setMSJslot(1));
                 S9C.setMensaje(TCorrelatorC.setMSJslot(2));
@@ -264,7 +262,7 @@ public class main {
             //***************************************************//
             //***************************************************//
             
-            //=====> Escribimos los Mensajes en el puerto Final del 1 al 9
+            //=====> Escribimos los Mensajes en el puerto Final
             P_Final.setPuerto(SFinal.getMensaje());
 
             //=====> El conector Camarero recoge los datos del puerto Final

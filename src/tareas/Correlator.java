@@ -28,43 +28,41 @@ public class Correlator implements ITarea {
     @Override
     public void realizarTarea() {
 
-        for (int a = 0; a < xmlContextE.size(); a++) {
-            int Body = -1, Context = -1;
-            try {
-                XPath xPath = XPathFactory.newInstance().newXPath();
-                for (int i = 0; i < xmlContextE.size(); i++) {
+        try {
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            XPathExpression exprC = xPath.compile("//result//name");
+            XPathExpression exprB = xPath.compile("//cafe_order//drink//name");
 
-                    // Evaluar la expresión XPath para obtener el contenido de <name> del contexto
-                    XPathExpression exprC = xPath.compile("//result//name");
-                    String nombreContext = (String) exprC.evaluate(xmlContextE.get(i), XPathConstants.STRING);
+            for (int i = 0; i < xmlContextE.size(); i++) {
+                int Body = -1, Context = -1;
+                // Evaluar la expresión XPath para obtener el contenido de <name> del contexto
+                String nombreContext = (String) exprC.evaluate(xmlContextE.get(i), XPathConstants.STRING);
+                for (int j = 0; j < xmlBodyE.size(); j++) {
 
-                    for (int j = 0; j < xmlBodyE.size(); j++) {
+                    // Evaluar la expresión XPath para obtener el contenido de <name> del body
+                    String nombreBody = (String) exprB.evaluate(xmlBodyE.get(j), XPathConstants.STRING);
+                    //Si son iguales los guardo y me salgo de los bucles
+                    if (nombreContext.equalsIgnoreCase(nombreBody)) {
 
-                        // Evaluar la expresión XPath para obtener el contenido de <name> del body
-                        XPathExpression exprB = xPath.compile("//cafe_order//drink//name");
-                        String nombreBody = (String) exprB.evaluate(xmlBodyE.get(i), XPathConstants.STRING);
+                        Context = i;
+                        Body = j;
 
-                        //Si son iguales los guardo y me salgo de los bucles
-                        if (nombreContext.equalsIgnoreCase(nombreBody)) {
-
-                            Context = i;
-                            Body = j;
-
-                            i = xmlContextE.size();
-                            j = xmlBodyE.size();
-                        }
+                        j = xmlBodyE.size();
                     }
                 }
-            } catch (Exception e) {
+                //Colocamos en su respectiva posición cada xml
+                if (Context == i) {
 
-                e.printStackTrace();
+                    xmlContextS.add(xmlContextE.get(Context));
+                    xmlBodyS.add(xmlBodyE.get(Body));
+                    nEllamada = xmlContextS.size();
+                }
             }
+        } catch (Exception e) {
 
-            //Colocamos en su respectiva posición cada xml
-            xmlContextS.add(xmlContextE.remove(Context));
-            xmlBodyS.add(xmlBodyE.remove(Body));
-            nEllamada = xmlContextS.size();
+            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -81,8 +79,10 @@ public class Correlator implements ITarea {
     public Document setMSJslot(int v) {
 
         if (v == 1) {
+            xmlContextE.remove(xmlContextS.get(0));
             return xmlContextS.remove(0);
         } else if (v == 2) {
+            xmlBodyE.remove(xmlBodyS.get(0));
             return xmlBodyS.remove(0);
         } else {
             return null;
@@ -90,7 +90,9 @@ public class Correlator implements ITarea {
     }
 
     public int devolverNConjuntos() {
-        //System.out.println(xmlSalida.size());
+        if (xmlContextS.size() == 0) {
+            nEllamada = 0;
+        }
         return nEllamada;
     }
 
