@@ -14,30 +14,27 @@ import java.util.ArrayList;
  */
 public abstract class Conector {
 
-
-
     private Connection conn = null;
-
-    String sgbd;
-    String ip;
-    String service_bd;
-    String usuario;
-    String password;
-
+    String URL = "";
+    
     public void Conector(String sgbd, String ip, String service_bd, String usuario,
                     String password) throws ClassNotFoundException, SQLException {
+        
+        if (sgbd.equals("oracle"))//Oracle
+        {
+            URL = "jdbc:oracle:thin:@" + ip + ":1521:" + service_bd;
+        } else if (sgbd.equals("mariadb"))//MariaDB
+        {
+            URL = "jdbc:mariadb://" + ip + ":3306/" + service_bd;
+        } else
+        {
+            URL = "JavaDB";
+        }
 
-        this.sgbd = sgbd;
-        this.ip = ip;
-        this.service_bd = service_bd;
-        this.usuario = usuario;
-        this.password = password;
-
-            conn = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@" + ip + ":1521:" + service_bd, usuario , password);
-
+        conn = DriverManager.getConnection(URL,usuario,password);
+        System.out.println("Conexión conseguida");
     }
-
+    
     Connection getConexion() {
 
         return conn;
@@ -50,7 +47,7 @@ public abstract class Conector {
 
     ArrayList<Document> xmlFiles = new ArrayList();
     
-    public Document leerMensaje() {
+    public Document leerMensaje(String Table) {
         
         return xmlFiles.remove(0);
     }

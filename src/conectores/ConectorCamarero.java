@@ -1,11 +1,15 @@
 package conectores;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ConectorCamarero extends Conector {
 
+    int id = 0;
+    
     public String convertirXMLtoString() {
 
         Node nPadre = xmlFiles.get(0).getDocumentElement();
@@ -26,7 +30,6 @@ public class ConectorCamarero extends Conector {
     }
 
     public void mostrarNodos(NodeList nHijos, StringBuilder mensaje) {
-
 
         for (int i = 0; i < nHijos.getLength(); i++) {
             Node nAux = nHijos.item(i);
@@ -50,17 +53,28 @@ public class ConectorCamarero extends Conector {
 
     }
 
-    public boolean CargarBD() {
+    public boolean CargarBD(String NombreTabla) {
 
-        String Mensaje = convertirXMLtoString();
-
-        return true;
+        try {
+            String Mensaje = convertirXMLtoString();
+            
+            PreparedStatement ps = getConexion().prepareStatement("INSERT INTO" + NombreTabla + " VALUES "
+                    + "(?,?)");
+            ps.setInt(1, id);
+            ps.setString(2, URL);
+            ps.executeUpdate();
+            
+            return true;
+        } catch (SQLException ex) {
+            System.out.println("Error en Conector Camarero");
+            return false;
+        }
     }
 
     @Override
-    public Document leerMensaje() {
+    public Document leerMensaje(String Table) {
 
-        CargarBD();
+        CargarBD(Table);
         return xmlFiles.remove(0);
     }
 
