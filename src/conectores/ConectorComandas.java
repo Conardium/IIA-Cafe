@@ -8,7 +8,13 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.*;
+import tareas.Translator;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *

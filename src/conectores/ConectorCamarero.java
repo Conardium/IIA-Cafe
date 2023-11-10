@@ -53,9 +53,11 @@ public class ConectorCamarero extends Conector {
 
     }
 
-    public boolean CargarBD(String NombreTabla) {
-
+    public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
+                            String password) {
         try {
+            Conexion( sgbd, ip,  service_bd,  usuario, password);
+
             String Mensaje = convertirXMLtoString();
             
             PreparedStatement ps = getConexion().prepareStatement("INSERT INTO" + NombreTabla + " VALUES "
@@ -63,18 +65,40 @@ public class ConectorCamarero extends Conector {
             ps.setInt(1, id);
             ps.setString(2, URL);
             ps.executeUpdate();
-            
+
+            desconexion();
+
             return true;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println("Error en Conector Camarero");
             return false;
         }
     }
 
-    @Override
-    public Document leerMensaje(String Table) {
+    public boolean borrarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
+                            String password) {
+        try {
+            Conexion( sgbd, ip,  service_bd,  usuario, password);
 
-        CargarBD(Table);
+            PreparedStatement ps = getConexion().prepareStatement("DELETE FROM" + NombreTabla);
+            ps.executeUpdate();
+
+            desconexion();
+
+            return true;
+        } catch (Exception ex) {
+            System.out.println("Error en Conector Camarero");
+            return false;
+        }
+    }
+
+
+
+    public Document leerMensaje(String Table, String sgbd, String ip, String service_bd, String usuario,
+                                String password ) {
+
+        CargarBD(Table, sgbd, ip, service_bd, usuario,
+                password);
         return xmlFiles.remove(0);
     }
 

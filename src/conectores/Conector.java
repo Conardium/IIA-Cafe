@@ -17,7 +17,7 @@ public abstract class Conector {
     private Connection conn = null;
     String URL = "";
     
-    public void Conector(String sgbd, String ip, String service_bd, String usuario,
+    public void Conexion(String sgbd, String ip, String service_bd, String usuario,
                     String password) throws ClassNotFoundException, SQLException {
         
         if (sgbd.equals("oracle"))//Oracle
@@ -26,7 +26,7 @@ public abstract class Conector {
         } else if (sgbd.equals("mariadb"))//MariaDB
         {
             URL = "jdbc:mariadb://" + ip + ":3306/" + service_bd;
-        } else
+        } else if (sgbd.equals("derby"))
         {
             URL = "jdbc:derby://" + ip + ":1527/" + service_bd;
             //jdbc:derby://localhost:1527/IIA_Cafe
@@ -47,11 +47,7 @@ public abstract class Conector {
 
 
     ArrayList<Document> xmlFiles = new ArrayList();
-    
-    public Document leerMensaje(String Table) {
-        
-        return xmlFiles.remove(0);
-    }
+
 
     public void escribirMensaje(Document Mensaje) {
         

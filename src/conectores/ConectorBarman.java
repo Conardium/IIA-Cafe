@@ -86,10 +86,8 @@ public class ConectorBarman extends Conector {
 
         xmlFiles.add(Mensaje);
     }
+    public Document leerMensaje() {
 
-    @Override
-    public Document leerMensaje(String Table) {
-        
         return devolverSQL();
     }
 

@@ -63,19 +63,17 @@ public class main {
     static Content_Enricher TCEnricherH = new Content_Enricher();
     static Merger TMerger = new Merger();
     static Aggregator TAggregator = new Aggregator();
-
-    /*****************Tablas BD*****************/
-    static String TablaInicial = "MENSAJEENTRADA";
-    static String TableFinal = "MENSAJESALIDA";
-    static String TableBebidas = "BEBIDAS";
     
     //main//
     public static void main(String[] args) {
 
+        //Cargamos Datos
+        CInicial.CargarBD(TablaInicial,sgbd,ip,service_bd,usuario,password);
+
         for (int i = 1; i <= 9; i++) {
 
             //=====> Escribimos los Mensajes en el puerto Inicial del 1 al 9
-            P_Inicial.setPuerto(CInicial.leerMensaje(TablaInicial)); //FUNCIONANDO
+            P_Inicial.setPuerto(CInicial.leerMensaje()); //FUNCIONANDO
             SInicial.setMensaje(P_Inicial.getPuerto()); //FUNCIONANDO
 
             //***************************************************//
@@ -160,7 +158,7 @@ public class main {
             for (int j = 0; j < S6C.devolverNConjuntos(); j++) {
                 P_ES_Cold.setPuerto(S6C.getMensaje());
                 cBC.escribirMensaje(P_ES_Cold.getPuerto());
-                cBC.busquedaBD(TableBebidas);
+                cBC.busquedaBD(TablaBebidas,sgbd, ip,  service_bd,  usuario, password);
             }
             //========> Conector escribe mensajes cold, el puerto los pasa al slot 
             for (int j = 0; j < cBC.getTotal(); j++) {
@@ -172,7 +170,7 @@ public class main {
             for (int j = 0; j < S6H.devolverNConjuntos(); j++) {
                 P_ES_Hot.setPuerto(S6H.getMensaje());
                 cBH.escribirMensaje(P_ES_Hot.getPuerto());
-                cBH.busquedaBD(TableBebidas);
+                cBH.busquedaBD(TablaBebidas,sgbd, ip,  service_bd,  usuario, password);
             }
             //========> Conector escribe mensajes hot, el puerto los pasa al slot 
             for (int j = 0; j < cBH.getTotal(); j++) {
@@ -278,12 +276,16 @@ public class main {
             //=====> El conector Camarero recoge los datos del puerto Final
             cCam.escribirMensaje(P_Final.getPuerto());
             // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
-            cCam.leerMensaje(TableFinal);
+            cCam.leerMensaje(TablaFinal,sgbd, ip,  service_bd,  usuario, password);
             
             System.out.println("Presiona Enter para continuar...");
             Scanner scanner = new Scanner(System.in);
             scanner.nextLine();
         }
+        System.out.println("Presiona Enter para continuar...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+        cCam.borrarBD(TablaFinal,sgbd, ip,  service_bd,  usuario, password);
 
         // ===== PARA COMPROBAR SI LA INFORMACION DEL DOCUMENTO LLEGA BIEN ======
         /*System.out.println(Mensaje.getFirstChild().getFirstChild().getNodeName()  + " "
