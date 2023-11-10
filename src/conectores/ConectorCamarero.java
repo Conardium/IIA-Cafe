@@ -17,14 +17,14 @@ public class ConectorCamarero extends Conector {
         StringBuilder mensaje = new StringBuilder();
 
         // Nodo Padre
-        System.out.println("\n*************************PUERTO FINAL**************************");
+        //System.out.println("\n*************************PUERTO FINAL**************************");
         mostrarNodos(nPadre.getChildNodes(), mensaje, 1);
         String mensajeFinal = "<" + nPadre.getNodeName() + ">"
                 + mensaje.toString()
                 + "\n</" + nPadre.getNodeName() + ">";
         //Cogemos los Nodos del padre recursivamente
-        System.out.println(mensajeFinal);
-        System.out.println("\n*************************------------**************************");
+        //System.out.println(mensajeFinal);
+        //System.out.println("\n*************************------------**************************");
 
         return mensajeFinal;
     }

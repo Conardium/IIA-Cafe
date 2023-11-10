@@ -21,6 +21,7 @@ public class Slot {
     //hace falta mas metodos porque no todos leen los mensajes de la misma forma dice el profe
 
     public Slot(String idSlot) {
+        
         this.idSlot = idSlot;
     }
 
@@ -67,7 +68,9 @@ public class Slot {
             Node nAux = nHijos.item(i);
 
             boolean esTexto = nAux.getNodeName().startsWith("#");
-
+            
+            String Mostrar;
+            
             if (!esTexto) {
                 System.out.println(tabulaciones + "<" + nAux.getNodeName() + ">");
             }
