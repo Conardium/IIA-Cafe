@@ -43,6 +43,29 @@ public class ConectorComandas extends Conector {
             }
 
         }
+    }*/
+
+    public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
+                            String password) {
+        try {
+            Conexion(sgbd, ip,  service_bd,  usuario, password);
+
+            String consulta = "SELECT * FROM " + NombreTabla;
+            PreparedStatement ps = getConexion().prepareStatement(consulta);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt(1);
+                Mensaje = rs.getString(2);
+                TransformarStringXML();
+            }
+            //Nos desconectamos
+            desconexion();
+
+            return true;
+        } catch (Exception ex) {
+            System.out.println("Error en el Conector Comandas");
+            return false;
+        }
     }
 
     public void TransformarStringXML(){
