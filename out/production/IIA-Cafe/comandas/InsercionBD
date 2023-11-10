@@ -1,0 +1,20 @@
+//**** RELLENAR TABLA DE BEBIDAS ****
+INSERT INTO Bebidas (name, exist) VALUES ('chocolate', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('cafe', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('coca-cola', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('te', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('tonica', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('guarana', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('tila', 1);
+INSERT INTO Bebidas (name, exist) VALUES ('cerveza', 1);
+
+//**** RELLENAR TABLA DE MENSAJEENTRADA ****
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (1, '<cafe_order><order_id>1</order_id><drinks><drink><name>cafe</name><type>hot</type></drink><drink><name>coca-cola</name><type>cold</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (2, '<cafe_order><order_id>2</order_id><drinks><drink><name>cafe</name><type>hot</type></drink><drink><name>chocolate</name><type>hot</type></drink><drink><name>coca-cola</name><type>cold</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (3, '<cafe_order><order_id>3</order_id><drinks><drink><name>te</name><type>hot</type></drink><drink><name>tonica</name><type>cold</type></drink><drink><name>coca-cola</name><type>cold</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (4, '<cafe_order><order_id>4</order_id><drinks><drink><name>chocolate</name><type>hot</type></drink><drink><name>tonica</name><type>cold</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (5, '<cafe_order><order_id>5</order_id><drinks><drink><name>te</name><type>hot</type></drink><drink><name>tonica</name><type>cold</type></drink><drink><name>coca-cola</name><type>cold</type></drink><drink><name>guarana</name><type>cold</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (6, '<cafe_order><order_id>6</order_id><drinks><drink><name>te</name><type>hot</type></drink><drink><name>tila</name><type>hot</type></drink><drink><name>coca-cola</name><type>cold</type></drink><drink><name>guarana</name><type>cold</type></drink><drink><name>cerveza</name><type>cold</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (7, '<cafe_order><order_id>7</order_id><drinks><drink><name>cafe</name><type>hot</type></drink><drink><name>te</name><type>hot</type></drink><drink><name>tila</name><type>hot</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (8, '<cafe_order><order_id>8</order_id><drinks><drink><name>cerveza</name><type>cold</type></drink><drink><name>guarana</name><type>cold</type></drink><drink><name>guarana</name><type>cold</type></drink><drink><name>tonica</name><type>cold</type></drink><drink><name>tonica</name><type>cold</type></drink><drink><name>coca-cola</name><type>cold</type></drink></drinks></cafe_order>');
+INSERT INTO MensajeEntrada (id, mensaje) VALUES (9, '<cafe_order><order_id>9</order_id><drinks><drink><name>cafe</name><type>hot</type></drink><drink><name>cafe</name><type>hot</type></drink><drink><name>te</name><type>hot</type></drink><drink><name>tila</name><type>hot</type></drink><drink><name>chocolate</name><type>hot</type></drink></drinks></cafe_order>');
