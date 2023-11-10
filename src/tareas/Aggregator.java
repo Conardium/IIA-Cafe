@@ -80,11 +80,11 @@ public class Aggregator implements ITarea{
                 NodoPadre.appendChild(id);
                 //Mi contexto: drinks
                 Node drinks = xmlOut.createElement("drinks");
-                NodoPadre.appendChild(drinks);
+                id.appendChild(drinks); //Cambio NodoPadre por id
 
                 //Pillamos todos los Nodos
                 for (int i = 0; i < contadorXMLs; i++) {//FALLA
-                    Node nodoAux = (Node) xPath.compile("//cafe_order//drinks//drink").evaluate(xmlUnir.get(0), XPathConstants.NODE);
+                    Node nodoAux = (Node) xPath.compile("//cafe_order//order_id//drinks//drink").evaluate(xmlUnir.get(0), XPathConstants.NODE);
                     Node nodo = xmlOut.importNode(nodoAux.getChildNodes().item(i), true);
                     drinks.appendChild(nodo);
                     //Borra del entrada
