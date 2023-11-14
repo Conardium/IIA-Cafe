@@ -63,5 +63,10 @@ public class Content_Enricher implements ITarea {
 
         return xmlSalida;
     }
+    
+    @Override
+    public int calcularSalidas() {
+        return 0;
+    }
 
 }

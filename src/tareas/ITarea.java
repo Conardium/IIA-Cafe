@@ -14,4 +14,6 @@ public interface ITarea {
 
     public Document setMSJslot(int v);
     
+    public int calcularSalidas();
+    
 }

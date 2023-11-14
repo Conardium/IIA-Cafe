@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package tareas;
 
 import org.w3c.dom.Document;
@@ -121,5 +118,10 @@ public class Aggregator implements ITarea {
 
     public int devolverNConjuntos() {
         return xmlEntrada.size();
+    }
+
+    @Override
+    public int calcularSalidas() {
+        return 0;
     }
 }

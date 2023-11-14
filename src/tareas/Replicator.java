@@ -25,4 +25,9 @@ public class Replicator implements ITarea{
     public Document setMSJslot(int v) {
         return xmlSalida.remove(0);
     }
+    
+    @Override
+    public int calcularSalidas() {
+        return 0;
+    }
 }

@@ -14,15 +14,15 @@ public class Distributor implements ITarea {
 
     @Override
     public void realizarTarea() {
-
+        
         //Si es cold
-        if(xmlEntrada.getFirstChild().getLastChild().getLastChild().getTextContent().compareTo("cold") == 0)
+        if(xmlEntrada.getFirstChild().getLastChild().getFirstChild().getLastChild().getTextContent().compareTo("cold") == 0)
         {
             xmlCold.add(xmlEntrada);
             nEcold = xmlCold.size();
         }
         //Si es hot
-        else if(xmlEntrada.getFirstChild().getLastChild().getLastChild().getTextContent().compareTo("hot") == 0)
+        else if(xmlEntrada.getFirstChild().getLastChild().getFirstChild().getLastChild().getTextContent().compareTo("hot") == 0)
         {
             xmlHot.add(xmlEntrada);
             nEhot = xmlHot.size();
@@ -74,4 +74,8 @@ public class Distributor implements ITarea {
         return nEhot;
     }
 
+    @Override
+    public int calcularSalidas() {
+        return 0;
+    }
 }

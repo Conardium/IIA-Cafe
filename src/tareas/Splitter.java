@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package tareas;
 
 import org.w3c.dom.*;
@@ -13,9 +9,14 @@ import org.w3c.dom.Document;
 
 public class Splitter implements ITarea {
 
-    Document xmlEntrada;
-    ArrayList<Document> xmlSalida = new ArrayList<>();
+    private Document xmlEntrada;
+    private ArrayList<Document> xmlSalida = new ArrayList<>();
     private int nEllamada = 0;
+    private String Expresion;
+
+    public Splitter(String Expresion) {
+        this.Expresion = Expresion;
+    }
 
     @Override
     public void realizarTarea() {
@@ -26,69 +27,32 @@ public class Splitter implements ITarea {
 
             XPath xPath = XPathFactory.newInstance().newXPath();
 
-            //Pillamos la orden
-            XPathExpression expression = xPath.compile("//cafe_order//order_id");
-            String numOrder = (String) expression.evaluate(xmlEntrada, XPathConstants.STRING);
+            //Todos los nodos por los que partimos
+            NodeList NodeList = (NodeList) xPath.compile(Expresion).evaluate(xmlEntrada, XPathConstants.NODESET);
 
-            //Pillamos todos los nodo hot
-            NodeList hotNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='hot']").evaluate(xmlEntrada, XPathConstants.NODESET);
-            //Pillamos todos los nodo cold
-            NodeList coldNodeList = (NodeList) xPath.compile("//cafe_order//drinks//drink[type='cold']").evaluate(xmlEntrada, XPathConstants.NODESET);
+            //Para pillar el nodo por el cual eliminaremos
+            String[] nNodos = Expresion.split("//");
 
-            //Hot
-            for (int i = 0; i < hotNodeList.getLength(); i++) {
+            //Empieza en 1 porque en XML se busca por la XPATH a partir de 1
+            for (int i = 1; i < NodeList.getLength() + 1; i++) {
 
                 //Crear un documento XML
                 Document xmlOut = dBuilder.newDocument();
 
-                //Crear un elemento Padre
-                Node NodoPadre = xmlOut.createElement("cafe_order");
-                xmlOut.appendChild(NodoPadre);
+                Node NodoPadre = xmlEntrada.getFirstChild();
+                Node NodoPadreImportado = xmlOut.importNode(NodoPadre, true);
 
-                //Mi contexto: el ID
-                Node id = xmlOut.createElement("order_id");
-                id.appendChild(xmlOut.createTextNode(numOrder));
-                NodoPadre.appendChild(id);
-                
+                //Eliminamos todos menos el hijo que queramos
+                ajustarNodos(NodoPadreImportado, i, nNodos[1]);
+
                 //Mi contexto: Número de Trozos
                 Node size = xmlOut.createElement("size");
-                size.appendChild(xmlOut.createTextNode(String.valueOf(hotNodeList.getLength() + coldNodeList.getLength())));
-                NodoPadre.appendChild(size);
-                
-                //El nodo con el hot
-                Node nodoHot = xmlOut.importNode(hotNodeList.item(i), true);
-                NodoPadre.appendChild(nodoHot);
+                size.appendChild(xmlOut.createTextNode(String.valueOf(NodeList.getLength())));
+                NodoPadreImportado.insertBefore(size, NodoPadreImportado.getFirstChild().getNextSibling());
 
-                //Guardo el xmlSalida
-                xmlSalida.add(xmlOut);
-                nEllamada = xmlSalida.size();
-            }
+                //añadimos el padre ya transformado
+                xmlOut.appendChild(NodoPadreImportado);
 
-            //Cold
-            for (int i = 0; i < coldNodeList.getLength(); i++) {
-
-                //Crear un documento XML
-                Document xmlOut = dBuilder.newDocument();
-
-                //Creo un Nuevo nodo que va a ser mi cabecera
-                Node NodoPadre = xmlOut.createElement("cafe_order");
-                xmlOut.appendChild(NodoPadre);
-
-                //Mi contexto: el ID
-                Node id = xmlOut.createElement("order_id");
-                id.appendChild(xmlOut.createTextNode(numOrder));
-                NodoPadre.appendChild(id);
-                
-                //Mi contexto: Número de Trozos
-                Node size = xmlOut.createElement("size");
-                size.appendChild(xmlOut.createTextNode(String.valueOf(hotNodeList.getLength() + coldNodeList.getLength())));
-                NodoPadre.appendChild(size);
-                
-                //Pongo el hijo cold
-                Node nodoCold = xmlOut.importNode(coldNodeList.item(i), true);
-                NodoPadre.appendChild(nodoCold);
-
-                //Guardo el xmlSalida
                 xmlSalida.add(xmlOut);
                 nEllamada = xmlSalida.size();
             }
@@ -98,23 +62,50 @@ public class Splitter implements ITarea {
         }
     }
 
+    private static void ajustarNodos(Node nodoPadre, int posicion, String expresion) {
+
+        if (nodoPadre.getNodeType() == Node.ELEMENT_NODE && nodoPadre.getNodeName().equalsIgnoreCase(expresion)) {
+            // Si el nodo actual coincide con la expresión, eliminar todos los hijos excepto el de la posición especificada
+            NodeList hijos = nodoPadre.getChildNodes();
+            int contador = 0;
+
+            for (int i = 0; i < hijos.getLength(); i++) {
+                Node hijo = hijos.item(i);
+                if (hijo.getNodeType() == Node.ELEMENT_NODE) {
+                    // Verificar si es el hijo en la posición específica
+                    if (++contador != posicion) {
+                        nodoPadre.removeChild(hijo);
+                        i--; // Ajustar el índice después de eliminar un nodo
+                    }
+                }
+            }
+        } else {
+            // Llamada recursiva para los nodos hijos
+            NodeList hijos = nodoPadre.getChildNodes();
+            for (int i = 0; i < hijos.getLength(); i++) {
+                Node hijo = hijos.item(i);
+                ajustarNodos(hijo, posicion, expresion);
+            }
+        }
+    }
+
     @Override
-    public void getMSJslot(Document xmlE) { xmlEntrada = xmlE;}
+    public void getMSJslot(Document xmlE) {
+        xmlEntrada = xmlE;
+    }
 
     @Override
     public Document setMSJslot(int v) {
-        //Muestro el MSJ
-        /*System.out.println(xmlSalida.get(0).getFirstChild().getFirstChild().getNodeName() + " "
-                + xmlSalida.get(0).getFirstChild().getFirstChild().getTextContent() + " "
-                + xmlSalida.get(0).getFirstChild().getLastChild().getLastChild().getNodeName() + " "
-                + xmlSalida.get(0).getFirstChild().getLastChild().getLastChild().getTextContent());
-                */
         return xmlSalida.remove(0);
     }
 
     public int devolverNConjuntos() {
-        //System.out.println(xmlSalida.size());
         return nEllamada;
+    }
+
+    @Override
+    public int calcularSalidas() {
+        return 0;
     }
 
 }

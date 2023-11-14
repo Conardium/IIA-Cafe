@@ -62,4 +62,9 @@ public class Translator implements ITarea {
     public Document setMSJslot(int v) {
         return xmlSalida;
     }
+    
+    @Override
+    public int calcularSalidas() {
+        return 0;
+    }
 }

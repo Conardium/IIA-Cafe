@@ -14,6 +14,11 @@ public class main {
     //**********Datos BD*********//
     static String sgbd = "derby", ip = "localhost", service_bd = "IIA_Cafe", usuario = "user_web", password = "web";
 
+    //**********Expresiones XML - XPATH********//
+    
+    static String Expresion = "//drinks//drink";
+    
+    
     /**
      * ***************Tablas BD****************
      */
@@ -53,10 +58,9 @@ public class main {
     static Slot SFinal = new Slot("Final");
 
     //************Tareas**************//
-    static Splitter TSplitter = new Splitter();
+    static Splitter TSplitter = new Splitter(Expresion);
     static Distributor TDistributor = new Distributor();
     static Replicator TReplicator = new Replicator();
-
     static Translator TTranslatorC = new Translator();
     static Translator TTranslatorH = new Translator();
     static Correlator TCorrelatorC = new Correlator();

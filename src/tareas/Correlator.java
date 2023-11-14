@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package tareas;
 
 import java.util.ArrayList;
@@ -94,6 +91,11 @@ public class Correlator implements ITarea {
             nEllamada = 0;
         }
         return nEllamada;
+    }
+    
+    @Override
+    public int calcularSalidas() {
+        return 0;
     }
 
 }
