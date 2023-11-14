@@ -12,8 +12,6 @@ import org.w3c.dom.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -21,28 +19,10 @@ import java.util.logging.Logger;
  */
 public class ConectorComandas extends Conector {
 
-    int id = 0;
-    String Mensaje = "";
+    private int id = 0;
+    private String Mensaje = "";
+    private int nEllamada = 0;
 
-    /*public ConectorComandas() {
-
-        String direccionAux = System.getProperty("user.dir") + "\\src\\comandas\\order";
-        System.out.println(direccionAux);
-
-        for (int i = 1; i <= 9; i++) {
-            try {
-                File ficheroComandas = new File(direccionAux + i + ".xml");
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                Document MensajeXML = builder.parse(ficheroComandas);
-                xmlFiles.add(MensajeXML);
-
-            } catch (Exception ex) {
-                System.out.println("Error en el inicio de ConectorComandas");
-            }
-
-        }
-    }*/
     public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
             String password) {
         try {
@@ -54,6 +34,7 @@ public class ConectorComandas extends Conector {
             while (rs.next()) {
                 id = rs.getInt(1);
                 Mensaje = rs.getString(2);
+                nEllamada++;
                 TransformarStringXML();
             }
             //Nos desconectamos
@@ -86,6 +67,13 @@ public class ConectorComandas extends Conector {
     public Document leerMensaje() {
 
         return xmlFiles.remove(0);
+    }
+
+    public int numMensajes() {
+        if (xmlFiles.isEmpty() == true) {
+            nEllamada = 0;
+        }
+        return nEllamada;
     }
 
     private static void StringToXML(Node node) {

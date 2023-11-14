@@ -18,9 +18,7 @@ public class main {
      * ***************Tablas BD****************
      */
     static String TablaInicial = "MENSAJEENTRADA", TablaFinal = "MENSAJESALIDA", TablaBebidas = "BEBIDAS";
-    
-    
-    
+
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
     static ConectorBarman cBC = new ConectorBarman();
@@ -73,7 +71,7 @@ public class main {
 
         //Cargamos Datos
         if (CInicial.CargarBD(TablaInicial, sgbd, ip, service_bd, usuario, password)) {
-            for (int i = 1; i <= 9; i++) {
+            for (int i = 1; i <= CInicial.numMensajes(); i++) {
 
                 //=====> Escribimos los Mensajes en el puerto Inicial del 1 al 9
                 P_Inicial.setPuerto(CInicial.leerMensaje()); //FUNCIONANDO
@@ -210,7 +208,7 @@ public class main {
                 //***************************************************//
                 //=====> Actua el Content Enricher cold
                 for (int j = 0; j < S8C.devolverNConjuntos(); j++) {
-                    
+
                     TCEnricherC.getMSJslot(S8C.getMensaje());
                     TCEnricherC.getMSJslot(S9C.getMensaje());
                     TCEnricherC.realizarTarea();
@@ -228,11 +226,9 @@ public class main {
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
-                
                 //***************************************************//
                 //**********************MERGER***********************//
                 //***************************************************//
-                
                 //=====> Actua el Merger para los cold
                 for (int j = 0; j < S10C.devolverNConjuntos(); j++) {
                     TMerger.getMSJslot(S10C.getMensaje());
@@ -282,13 +278,13 @@ public class main {
                 Scanner scanner = new Scanner(System.in);
                 scanner.nextLine();
             }
+            //Borramos la BD
+            System.out.println("Vamos a Borrar los mensajes finales de la BD");
+            System.out.println("Presiona Enter para continuar...");
+            Scanner scanner = new Scanner(System.in);
+            scanner.nextLine();
+            cCam.borrarBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
         }
-        //Borramos la BD
-        System.out.println("Vamos a Borrar los mensajes finales de la BD");
-        System.out.println("Presiona Enter para continuar...");
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
-        cCam.borrarBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
 
         // ===== PARA COMPROBAR SI LA INFORMACION DEL DOCUMENTO LLEGA BIEN ======
         /*System.out.println(Mensaje.getFirstChild().getFirstChild().getNodeName()  + " "

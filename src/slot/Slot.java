@@ -18,7 +18,6 @@ public class Slot {
     private String idSlot;
     private ArrayList<Document> xmlBuffer = new ArrayList<>();
     private int nEllamada = 0;
-    //hace falta mas metodos porque no todos leen los mensajes de la misma forma dice el profe
 
     public Slot(String idSlot) {
         
