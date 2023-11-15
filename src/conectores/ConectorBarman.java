@@ -85,7 +85,7 @@ public class ConectorBarman extends Conector {
     //Colocamos en el puerto el xml
     public void escribirMensaje() {
 
-        xmlFiles.add(puerto.getPuertoS());
+        xmlFiles.add(puerto.getPuertoE());
     }
     //Recogemos el mensaje del puerto
     public void leerMensaje() {
