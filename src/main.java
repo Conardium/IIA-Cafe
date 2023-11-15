@@ -21,7 +21,7 @@ public class main {
     static String TablaInicial = "MENSAJEENTRADA", TablaFinal = "MENSAJESALIDA", TablaBebidas = "BEBIDAS";
 
      //**********Expresiones XML - XPATH********//
-    
+
     static String ExpresionSplitter = "//drinks//drink"; //Padre + hijo de donde hacer Split
     static String FiltroDistributor = "//type"; //Diferentes valores por donde se distribuye
     static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaBebidas + "\n\tWHERE NAME = '";//En lo que se convierte el XML
@@ -31,7 +31,7 @@ public class main {
     static String FiltroBody = "//drink";//El nodo body al que añadirlo
     static String ExpresionAggregator = "//drinks//drink";//Padre + hijo de donde se hace Agregacion
     static String FiltroAgregator = "//order_id/text()"; //Para saber que trozos son iguales
-    
+
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
     static ConectorBarman cBC = new ConectorBarman();
@@ -80,8 +80,8 @@ public class main {
 
     //main//
     public static void main(String[] args) {
-        
-        
+
+
         //Cargamos Datos
         if (CInicial.CargarBD(TablaInicial, sgbd, ip, service_bd, usuario, password)) {
             for (int i = 1; i <= CInicial.numMensajes(); i++) {
@@ -103,7 +103,7 @@ public class main {
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
-                
+
                 //***************************************************//
                 //******************DISTRIBUTOR**********************//
                 //***************************************************//
@@ -124,7 +124,7 @@ public class main {
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
-                
+
                 //***************************************************//
                 //******************REPLICATOR***********************//
                 //***************************************************//
@@ -146,7 +146,7 @@ public class main {
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
-                
+
                 //***************************************************//
                 //******************TRANSLATOR***********************//
                 //***************************************************//
@@ -262,7 +262,7 @@ public class main {
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
-                
+
                 //***************************************************//
                 //********************AGGREGATOR*********************//
                 //***************************************************//
