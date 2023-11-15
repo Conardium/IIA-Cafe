@@ -1,5 +1,6 @@
 
 import conectores.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 import puertos.Puerto;
 import slot.Slot;
@@ -17,6 +18,7 @@ public class main {
     //**********Expresiones XML - XPATH********//
     
     static String Expresion = "//drinks//drink";
+    static String Filtro = "type";
     
     
     /**
@@ -59,7 +61,7 @@ public class main {
 
     //************Tareas**************//
     static Splitter TSplitter = new Splitter(Expresion);
-    static Distributor TDistributor = new Distributor();
+    static Distributor TDistributor = new Distributor(Filtro);
     static Replicator TReplicator = new Replicator();
     static Translator TTranslatorC = new Translator();
     static Translator TTranslatorH = new Translator();
@@ -72,7 +74,8 @@ public class main {
 
     //main//
     public static void main(String[] args) {
-
+        
+        
         //Cargamos Datos
         if (CInicial.CargarBD(TablaInicial, sgbd, ip, service_bd, usuario, password)) {
             for (int i = 1; i <= CInicial.numMensajes(); i++) {
@@ -103,12 +106,12 @@ public class main {
                     TDistributor.realizarTarea();
                 }
                 //=====> coloca en el slot el Distributor para los cold
-                for (int j = 0; j < TDistributor.devolverNCold(); j++) {
-                    S3C.setMensaje(TDistributor.setMSJslot(1));
+                while (TDistributor.devolverN(0) > 0) {
+                    S3C.setMensaje(TDistributor.setMSJslot(0));
                 }
                 //=====> coloca en el slot el Distributor para los hot
-                for (int j = 0; j < TDistributor.devolverNHot(); j++) {
-                    S3H.setMensaje(TDistributor.setMSJslot(2));
+                while (TDistributor.devolverN(1) > 0) {
+                    S3H.setMensaje(TDistributor.setMSJslot(1));
                 }
 
                 //***************************************************//
