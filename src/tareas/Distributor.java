@@ -34,7 +34,7 @@ public class Distributor implements ITarea {
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
             //Recojemos el primer filtro de la lista que indica cual es el parametro a buscar
-            Node NodoPadre = (Node) xPath.compile("//" + Filtro).evaluate(xmlEntrada, XPathConstants.NODE);
+            Node NodoPadre = (Node) xPath.compile(Filtro).evaluate(xmlEntrada, XPathConstants.NODE);
 
             String Filtro = NodoPadre.getTextContent();
             // Obtener la lista correspondiente al filtro

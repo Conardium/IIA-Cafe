@@ -15,17 +15,18 @@ public class main {
     //**********Datos BD*********//
     static String sgbd = "derby", ip = "localhost", service_bd = "IIA_Cafe", usuario = "user_web", password = "web";
 
-    //**********Expresiones XML - XPATH********//
-    
-    static String Expresion = "//drinks//drink";
-    static String Filtro = "type";
-    
-    
     /**
      * ***************Tablas BD****************
      */
     static String TablaInicial = "MENSAJEENTRADA", TablaFinal = "MENSAJESALIDA", TablaBebidas = "BEBIDAS";
 
+     //**********Expresiones XML - XPATH********//
+    
+    static String Expresion = "//drinks//drink";
+    static String FiltroDistributor = "//type";
+    static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaBebidas + "\n\tWHERE NAME = '";
+    static String FiltroTranslator = "//name";
+    
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
     static ConectorBarman cBC = new ConectorBarman();
@@ -61,10 +62,10 @@ public class main {
 
     //************Tareas**************//
     static Splitter TSplitter = new Splitter(Expresion);
-    static Distributor TDistributor = new Distributor(Filtro);
-    static Replicator TReplicator = new Replicator();
-    static Translator TTranslatorC = new Translator();
-    static Translator TTranslatorH = new Translator();
+    static Distributor TDistributor = new Distributor(FiltroDistributor);
+    static Replicator TReplicator = new Replicator(2);
+    static Translator TTranslatorC = new Translator(FiltroTranslator,ExpresionTranslator);
+    static Translator TTranslatorH = new Translator(FiltroTranslator,ExpresionTranslator);
     static Correlator TCorrelatorC = new Correlator();
     static Correlator TCorrelatorH = new Correlator();
     static Content_Enricher TCEnricherC = new Content_Enricher();
@@ -97,6 +98,7 @@ public class main {
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
+                
                 //***************************************************//
                 //******************DISTRIBUTOR**********************//
                 //***************************************************//
@@ -117,6 +119,7 @@ public class main {
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
+                
                 //***************************************************//
                 //******************REPLICATOR***********************//
                 //***************************************************//
@@ -125,19 +128,20 @@ public class main {
                     TReplicator.getMSJslot(S3C.getMensaje());
                     TReplicator.realizarTarea(); //Multiplica la cantidad
                     S4C.setMensaje(TReplicator.setMSJslot(0));
-                    S5C.setMensaje(TReplicator.setMSJslot(0));
+                    S5C.setMensaje(TReplicator.setMSJslot(1));
                 }
                 //=====> Actua el Replicator para los hot
                 for (int j = 0; j < S3H.devolverNConjuntos(); j++) {
                     TReplicator.getMSJslot(S3H.getMensaje());
                     TReplicator.realizarTarea(); //Multiplica la cantidad
                     S4H.setMensaje(TReplicator.setMSJslot(0));
-                    S5H.setMensaje(TReplicator.setMSJslot(0));
+                    S5H.setMensaje(TReplicator.setMSJslot(1));
                 }
 
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
+                
                 //***************************************************//
                 //******************TRANSLATOR***********************//
                 //***************************************************//
