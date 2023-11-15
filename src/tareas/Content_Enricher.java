@@ -8,9 +8,18 @@ import org.w3c.dom.Document;
 
 public class Content_Enricher implements ITarea {
 
-    Document xmlEntradaContext;
-    Document xmlEntradaBody;
-    Document xmlSalida;
+    private Document xmlEntradaContext;
+    private Document xmlEntradaBody;
+    private Document xmlSalida;
+    
+    private final String FiltroContexto;
+    private final String FiltroBody;
+
+    public Content_Enricher(String FiltroContexo, String FiltroBody) {
+        this.FiltroContexto = FiltroContexo;
+        this.FiltroBody = FiltroBody;
+    }
+    
 
     @Override
     public void realizarTarea() {
@@ -20,33 +29,55 @@ public class Content_Enricher implements ITarea {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             XPath xPath = XPathFactory.newInstance().newXPath();
 
-            // Evaluar la expresión XPath para obtener el contenido de <exist> del contexto
-            XPathExpression expr = xPath.compile("//result//exist");
-            String existValue = (String) expr.evaluate(xmlEntradaContext, XPathConstants.STRING);
+            // Evaluar la expresión XPath para obtener el nodo del contexto
+            XPathExpression expr = xPath.compile(FiltroContexto);
+            Node nodoAnadir = (Node) expr.evaluate(xmlEntradaContext, XPathConstants.NODE);
 
             //Creamos nuevo documento XML
             Document xmlOut = dBuilder.newDocument();
 
             //Cogemos todos los nodos del Body
-            XPathExpression expression = xPath.compile("//cafe_order");
-            Node nodoAux = (Node) expression.evaluate(xmlEntradaBody, XPathConstants.NODE);
-            nodoAux = xmlOut.importNode(nodoAux, true);
+            Node nodoAux = xmlOut.importNode(xmlEntradaBody.getFirstChild(), true);
             xmlOut.appendChild(nodoAux);
             
-            // Crear un nodo para <exist> en el documento creado, dentro del nodo drink
-            Node existencia = xmlOut.createElement("exist");
-            existencia.appendChild(xmlOut.createTextNode(existValue));
-            xmlOut.getFirstChild().getLastChild().appendChild(existencia);
+            String nombreNodo[] = FiltroBody.split("//");
+            
+            // Busqueda del nodo del que será hijo
+            Node nodoPadreBuscado = buscarNodoBody(nodoAux,nombreNodo[1]);
+            // Importamos el nodo del contexto
+            Node nodoHijoBuscado = xmlOut.importNode(nodoAnadir, true);
+            // Lo hacemos hijo
+            nodoPadreBuscado.appendChild(nodoHijoBuscado);
 
             //Lo colocamos en la salida
             xmlSalida = xmlOut;
 
-            xmlEntradaBody = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+    private static Node buscarNodoBody(Node nodoActual, String nombre) {
+        // Verificar si el nodo actual es el que estamos buscando
+        if (nodoActual != null && nodoActual.getNodeName().equalsIgnoreCase(nombre)) {
+            return nodoActual;
+        }
+
+        // Obtener la lista de hijos del nodo actual
+        Node hijo = nodoActual.getFirstChild();
+
+        // Recorrer todos los hijos y realizar la búsqueda recursiva
+        while (hijo != null) {
+            Node nodoEncontrado = buscarNodoBody(hijo, nombre);
+            if (nodoEncontrado != null) {
+                return nodoEncontrado; // Devolver el nodo si se encuentra
+            }
+            hijo = hijo.getNextSibling(); // Pasar al siguiente hijo
+        }
+
+        return null; // Devolver null si no se encuentra el nodo
+    }
+    
 
     @Override
     public void getMSJslot(Document xmlE) {

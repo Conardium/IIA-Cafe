@@ -7,14 +7,13 @@ import java.util.ArrayList;
 public class Merger implements ITarea {
 
     private Document xmlEntrada;
-    ArrayList<Document> xmlSalida = new ArrayList<>();
+    private ArrayList<Document> xmlSalida = new ArrayList<>();
 
     @Override
     public void realizarTarea() {
 
         xmlSalida.add(xmlEntrada);
     }
-
 
 
     @Override

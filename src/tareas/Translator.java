@@ -14,8 +14,8 @@ public class Translator implements ITarea {
 
     private Document xmlEntrada;
     private Document xmlSalida;
-    private String Filtro;
-    private String Expresion;
+    private final String Filtro;
+    private final String Expresion;
     
     public Translator(String Filtro, String Expresion)
     {

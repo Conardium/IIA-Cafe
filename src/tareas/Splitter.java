@@ -12,7 +12,7 @@ public class Splitter implements ITarea {
     private Document xmlEntrada;
     private ArrayList<Document> xmlSalida = new ArrayList<>();
     private int nEllamada = 0;
-    private String Expresion;
+    private final String Expresion;
 
     public Splitter(String Expresion) {
         this.Expresion = Expresion;

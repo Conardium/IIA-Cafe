@@ -22,10 +22,15 @@ public class main {
 
      //**********Expresiones XML - XPATH********//
     
-    static String Expresion = "//drinks//drink";
-    static String FiltroDistributor = "//type";
-    static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaBebidas + "\n\tWHERE NAME = '";
-    static String FiltroTranslator = "//name";
+    static String ExpresionSplitter = "//drinks//drink"; //Padre + hijo de donde hacer Split
+    static String FiltroDistributor = "//type"; //Diferentes valores por donde se distribuye
+    static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaBebidas + "\n\tWHERE NAME = '";//En lo que se convierte el XML
+    static String FiltroTranslator = "//name";//Para buscar en la base datos
+    static String FiltroCorrelator = "//name";//Por donde hacer la correlacion
+    static String FiltroContext = "//exist";//El nodo contexto
+    static String FiltroBody = "//drink";//El nodo body al que añadirlo
+    static String ExpresionAggregator = "//drinks//drink";//Padre + hijo de donde se hace Agregacion
+    static String FiltroAgregator = "//order_id/text()"; //Para saber que trozos son iguales
     
     //**********Iniciales*********//
     static ConectorComandas CInicial = new ConectorComandas();
@@ -61,17 +66,17 @@ public class main {
     static Slot SFinal = new Slot("Final");
 
     //************Tareas**************//
-    static Splitter TSplitter = new Splitter(Expresion);
+    static Splitter TSplitter = new Splitter(ExpresionSplitter);
     static Distributor TDistributor = new Distributor(FiltroDistributor);
     static Replicator TReplicator = new Replicator(2);
     static Translator TTranslatorC = new Translator(FiltroTranslator,ExpresionTranslator);
     static Translator TTranslatorH = new Translator(FiltroTranslator,ExpresionTranslator);
-    static Correlator TCorrelatorC = new Correlator();
-    static Correlator TCorrelatorH = new Correlator();
-    static Content_Enricher TCEnricherC = new Content_Enricher();
-    static Content_Enricher TCEnricherH = new Content_Enricher();
+    static Correlator TCorrelatorC = new Correlator(FiltroCorrelator);
+    static Correlator TCorrelatorH = new Correlator(FiltroCorrelator);
+    static Content_Enricher TCEnricherC = new Content_Enricher(FiltroContext,FiltroBody);
+    static Content_Enricher TCEnricherH = new Content_Enricher(FiltroContext,FiltroBody);
     static Merger TMerger = new Merger();
-    static Aggregator TAggregator = new Aggregator();
+    static Aggregator TAggregator = new Aggregator(ExpresionAggregator,FiltroAgregator);
 
     //main//
     public static void main(String[] args) {

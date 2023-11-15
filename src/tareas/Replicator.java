@@ -13,7 +13,7 @@ public class Replicator implements ITarea {
     //Archivo que se encargará de replicar
     private Document xmlEntrada;
     //Numero de veces que replicará
-    private int numSalidas;
+    private final int numSalidas;
 
     public Replicator(int numSalidas) {
         this.numSalidas = numSalidas;

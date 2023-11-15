@@ -1,7 +1,9 @@
-
 package tareas;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -14,44 +16,61 @@ import org.w3c.dom.Document;
  */
 public class Correlator implements ITarea {
 
-    ArrayList<Document> xmlBodyE = new ArrayList<>();
-    ArrayList<Document> xmlBodyS = new ArrayList<>();
+    //Mapa para añadir los tipos de datos de entrada.
+    private Map<String, ArrayList<Document>> mapaListasE;
 
-    ArrayList<Document> xmlContextE = new ArrayList<>();
-    ArrayList<Document> xmlContextS = new ArrayList<>();
+   
+    private ArrayList<Document> xmlBodyS = new ArrayList<>();
+    private ArrayList<Document> xmlContextS = new ArrayList<>();
 
     private int nEllamada = 0;
+
+    private final String Filtro;
+
+    public Correlator(String Filtro) {
+
+        this.Filtro = Filtro;
+        this.mapaListasE = new HashMap<>();
+    }
 
     @Override
     public void realizarTarea() {
 
+        //Se puede hacer más génerico
+        //ya que el correlator puede tener muchas entradas y muchas salidas.
+        
+        // Crear iteradores separados para las listas
+        Iterator<ArrayList<Document>> IteratorE = mapaListasE.values().iterator();
+        // Obtener la lista correspondiente al filtro
+        ArrayList<Document> listaContext = IteratorE.next();
+        ArrayList<Document> listaBody = IteratorE.next();
+
         try {
             XPath xPath = XPathFactory.newInstance().newXPath();
-            XPathExpression exprC = xPath.compile("//result//name");
-            XPathExpression exprB = xPath.compile("//cafe_order//drink//name");
+            XPathExpression Expresion = xPath.compile(Filtro);
 
-            for (int i = 0; i < xmlContextE.size(); i++) {
+            for (int i = 0; i < listaContext.size(); i++) {
                 int Body = -1, Context = -1;
                 // Evaluar la expresión XPath para obtener el contenido de <name> del contexto
-                String nombreContext = (String) exprC.evaluate(xmlContextE.get(i), XPathConstants.STRING);
-                for (int j = 0; j < xmlBodyE.size(); j++) {
+                String nombreContext = (String) Expresion.evaluate(listaContext.get(i), XPathConstants.STRING);
+                for (int j = 0; j < listaBody.size(); j++) {
 
                     // Evaluar la expresión XPath para obtener el contenido de <name> del body
-                    String nombreBody = (String) exprB.evaluate(xmlBodyE.get(j), XPathConstants.STRING);
+                    String nombreBody = (String) Expresion.evaluate(listaBody.get(j), XPathConstants.STRING);
                     //Si son iguales los guardo y me salgo de los bucles
                     if (nombreContext.equalsIgnoreCase(nombreBody)) {
 
                         Context = i;
                         Body = j;
 
-                        j = xmlBodyE.size();
+                        j = listaBody.size();
                     }
                 }
                 //Colocamos en su respectiva posición cada xml
                 if (Context == i) {
 
-                    xmlContextS.add(xmlContextE.get(Context));
-                    xmlBodyS.add(xmlBodyE.get(Body));
+                    xmlContextS.add(listaContext.get(Context));
+                    xmlBodyS.add(listaBody.get(Body));
                     nEllamada = xmlContextS.size();
                 }
             }
@@ -65,21 +84,25 @@ public class Correlator implements ITarea {
     @Override
     public void getMSJslot(Document xmlE) {
 
-        if ("result".equals(xmlE.getFirstChild().getNodeName())) {
-            xmlContextE.add(xmlE);
-        } else {
-            xmlBodyE.add(xmlE);
-        }
+        // Obtener la lista correspondiente al filtro
+        ArrayList<Document> listaFiltro = mapaListasE.computeIfAbsent(xmlE.getFirstChild().getNodeName(), k -> new ArrayList<>());
+        listaFiltro.add(xmlE);
     }
 
     @Override
     public Document setMSJslot(int v) {
-
+        
+        // Crear iteradores separados para las listas
+        Iterator<ArrayList<Document>> IteratorE = mapaListasE.values().iterator();
+        // Obtener la lista correspondiente al filtro
+        ArrayList<Document> listaContext = IteratorE.next();
+        ArrayList<Document> listaBody = IteratorE.next();
+        
         if (v == 1) {
-            xmlContextE.remove(xmlContextS.get(0));
+            listaContext.remove(xmlContextS.get(0));
             return xmlContextS.remove(0);
         } else if (v == 2) {
-            xmlBodyE.remove(xmlBodyS.get(0));
+            listaBody.remove(xmlBodyS.get(0));
             return xmlBodyS.remove(0);
         } else {
             return null;
@@ -92,7 +115,7 @@ public class Correlator implements ITarea {
         }
         return nEllamada;
     }
-    
+
     @Override
     public int calcularSalidas() {
         return 0;

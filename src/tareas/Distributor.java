@@ -20,7 +20,7 @@ public class Distributor implements ITarea {
     private int nSalidas = 0;
 
 
-    private String Filtro;
+    private final String Filtro;
 
     public Distributor(String Filtro) {
         
