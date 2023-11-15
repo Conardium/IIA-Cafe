@@ -1,6 +1,7 @@
 package conectores;
 
 import org.w3c.dom.Document;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public abstract class Conector {
 
     private Connection conn = null;
-    String URL = "";
+    private String URL = "";
 
     public void Conexion(String sgbd, String ip, String service_bd, String usuario,
             String password) throws SQLException {

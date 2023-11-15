@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import puertos.PuertoEoS;
 
 public class ConectorCamarero extends Conector {
 
     int id = 0;
+    PuertoEoS puerto = new PuertoEoS(1);
 
     public String convertirXMLtoString() {
 
@@ -89,8 +91,8 @@ public class ConectorCamarero extends Conector {
         }
     }
 
-    public Document leerMensaje(String Table, String sgbd, String ip, String service_bd, String usuario,
-            String password) {
+    public Document anadirMensajeBD(String Table, String sgbd, String ip, String service_bd, String usuario,
+                                    String password) {
 
         CargarBD(Table, sgbd, ip, service_bd, usuario,
                 password);

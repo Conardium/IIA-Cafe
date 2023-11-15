@@ -84,7 +84,7 @@ public class ConectorBarman extends Conector {
     @Override
     public void escribirMensaje(Document Mensaje) {
 
-        xmlFiles.add(Mensaje);
+        xmlFiles.add(puerto.getPuertoS());
     }
     public Document leerMensaje() {
 
@@ -92,7 +92,6 @@ public class ConectorBarman extends Conector {
     }
 
     public Document devolverSQL() {
-
         return xmlSQL.remove(0);
     }
 

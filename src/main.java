@@ -1,8 +1,8 @@
 
 import conectores.*;
-import java.util.ArrayList;
+
 import java.util.Scanner;
-import puertos.Puerto;
+
 import slot.Slot;
 import tareas.*;
 
@@ -288,7 +288,7 @@ public class main {
                 //=====> El conector Camarero recoge los datos del puerto Final
                 cCam.escribirMensaje(P_Final.getPuerto());
                 // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
-                cCam.leerMensaje(TablaFinal, sgbd, ip, service_bd, usuario, password);
+                cCam.anadirMensajeBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
 
                 System.out.println("Presiona Enter para continuar...");
                 Scanner scanner = new Scanner(System.in);

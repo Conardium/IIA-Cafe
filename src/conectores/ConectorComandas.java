@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.*;
+import puertos.PuertoEoS;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ public class ConectorComandas extends Conector {
     private int id = 0;
     private String Mensaje = "";
     private int nEllamada = 0;
+    private PuertoEoS puerto = new PuertoEoS(2);
 
     public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
             String password) {
