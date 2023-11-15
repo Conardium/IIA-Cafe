@@ -69,6 +69,12 @@ public class ConectorCamarero extends Conector {
 
     }
 
+    //Recogemos el mensaje del puerto
+    public void escribirMensaje() {
+
+        xmlFiles.add(puerto.getPuerto());
+    }
+
     public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
             String password) {
         try {

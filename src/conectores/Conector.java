@@ -45,9 +45,4 @@ public abstract class Conector {
 
     ArrayList<Document> xmlFiles = new ArrayList();
 
-    public void escribirMensaje(Document Mensaje) {
-
-        xmlFiles.add(Mensaje);
-    }
-
 }

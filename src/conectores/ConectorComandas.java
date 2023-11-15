@@ -66,9 +66,10 @@ public class ConectorComandas extends Conector {
         }
     }
 
-    public Document leerMensaje() {
+    //Colocamos en el puerto el xml
+    public void leerMensaje() {
 
-        return xmlFiles.remove(0);
+        puerto.setPuerto(xmlFiles.remove(0));
     }
 
     public int numMensajes() {

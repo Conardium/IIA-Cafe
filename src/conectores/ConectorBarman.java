@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import puertos.PuertoES;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -11,8 +12,9 @@ import java.util.ArrayList;
 
 public class ConectorBarman extends Conector {
 
-    ArrayList<Document> xmlSQL = new ArrayList();
-    int total;
+    private ArrayList<Document> xmlSQL = new ArrayList();
+    private int total = 0;
+    private PuertoES puerto = new PuertoES();
 
     public void busquedaBD(String Table, String sgbd, String ip, String service_bd, String usuario,
                            String password) {
@@ -80,15 +82,14 @@ public class ConectorBarman extends Conector {
         }
 
     }
-
-    @Override
-    public void escribirMensaje(Document Mensaje) {
+    //Colocamos en el puerto el xml
+    public void escribirMensaje() {
 
         xmlFiles.add(puerto.getPuertoS());
     }
-    public Document leerMensaje() {
-
-        return devolverSQL();
+    //Recogemos el mensaje del puerto
+    public void leerMensaje() {
+        puerto.setPuertoS(devolverSQL());
     }
 
     public Document devolverSQL() {
