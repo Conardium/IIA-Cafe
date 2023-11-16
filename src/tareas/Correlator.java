@@ -14,7 +14,7 @@ import org.w3c.dom.Document;
  *
  * @author Cristian
  */
-public class Correlator implements ITarea {
+public class Correlator extends Tarea {
 
     //Mapa para añadir los tipos de datos de entrada.
     private Map<String, ArrayList<Document>> mapaListasE;
@@ -121,4 +121,18 @@ public class Correlator implements ITarea {
         return 0;
     }
 
+
+    public void enlazarSlotE(Slot slot, int i) {
+        if(i == 1)
+            this.slotEContext = slot;
+        else
+            this.slotEBody = slot;
+    }
+
+    public Slot enlazarSlotS(int i) {
+        if(i == 1)
+            return slotSContext;
+        else
+            return slotSBody;
+    }
 }

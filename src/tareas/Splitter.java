@@ -6,6 +6,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
+import slot.Slot;
 
 public class Splitter implements ITarea {
 
@@ -22,43 +23,46 @@ public class Splitter implements ITarea {
     public void realizarTarea() {
         try {
 
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-            XPath xPath = XPathFactory.newInstance().newXPath();
+                XPath xPath = XPathFactory.newInstance().newXPath();
 
-            //Todos los nodos por los que partimos
-            NodeList NodeList = (NodeList) xPath.compile(Expresion).evaluate(xmlEntrada, XPathConstants.NODESET);
+                //Todos los nodos por los que partimos
+                NodeList NodeList = (NodeList) xPath.compile(Expresion).evaluate(xmlEntrada, XPathConstants.NODESET);
 
-            //Para pillar el nodo por el cual eliminaremos
-            String[] nNodos = Expresion.split("//");
+                //Para pillar el nodo por el cual eliminaremos
+                String[] nNodos = Expresion.split("//");
 
-            //Empieza en 1 porque en XML se busca por la XPATH a partir de 1
-            for (int i = 1; i < NodeList.getLength() + 1; i++) {
+                //Empieza en 1 porque en XML se busca por la XPATH a partir de 1
+                for (int i = 1; i < NodeList.getLength() + 1; i++) {
 
-                //Crear un documento XML
-                Document xmlOut = dBuilder.newDocument();
+                    //Crear un documento XML
+                    Document xmlOut = dBuilder.newDocument();
 
-                Node NodoPadre = xmlEntrada.getFirstChild();
-                Node NodoPadreImportado = xmlOut.importNode(NodoPadre, true);
+                    Node NodoPadre = xmlEntrada.getFirstChild();
+                    Node NodoPadreImportado = xmlOut.importNode(NodoPadre, true);
 
-                //Eliminamos todos menos el hijo que queramos
-                ajustarNodos(NodoPadreImportado, i, nNodos[1]);
+                    //Eliminamos todos menos el hijo que queramos
+                    ajustarNodos(NodoPadreImportado, i, nNodos[1]);
 
-                //Mi contexto: Número de Trozos
-                Node size = xmlOut.createElement("size");
-                size.appendChild(xmlOut.createTextNode(String.valueOf(NodeList.getLength())));
-                NodoPadreImportado.insertBefore(size, NodoPadreImportado.getFirstChild().getNextSibling());
+                    //Mi contexto: Número de Trozos
+                    Node size = xmlOut.createElement("size");
+                    size.appendChild(xmlOut.createTextNode(String.valueOf(NodeList.getLength())));
+                    NodoPadreImportado.insertBefore(size, NodoPadreImportado.getFirstChild().getNextSibling());
 
-                //añadimos el padre ya transformado
-                xmlOut.appendChild(NodoPadreImportado);
+                    //añadimos el padre ya transformado
+                    xmlOut.appendChild(NodoPadreImportado);
 
-                xmlSalida.add(xmlOut);
-                nEllamada = xmlSalida.size();
+                    xmlSalida.add(xmlOut);
+                    nEllamada = xmlSalida.size();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            setMSJslot();
+        }
         }
     }
 
@@ -89,9 +93,8 @@ public class Splitter implements ITarea {
         }
     }
 
-    @Override
-    public void getMSJslot(Document xmlE) {
-        xmlEntrada = xmlE;
+    public void getMSJslot() {
+        xmlEntrada = slotE.getMensaje();
     }
 
     @Override
@@ -106,6 +109,16 @@ public class Splitter implements ITarea {
     @Override
     public int calcularSalidas() {
         return 0;
+    }
+
+    @Override
+    public void enlazarSlotE(Slot slot) {
+            this.slotE = slot;
+    }
+
+    @Override
+    public Slot enlazarSlotS() {
+        return slotS;
     }
 
 }

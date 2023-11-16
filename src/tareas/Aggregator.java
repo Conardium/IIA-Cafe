@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.w3c.dom.*;
+import slot.Slot;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
@@ -15,7 +17,7 @@ import javax.xml.xpath.*;
  *
  * @author Cristian
  */
-public class Aggregator implements ITarea {
+public class Aggregator extends Tarea {
 
     private ArrayList<Document> xmlEntrada = new ArrayList<>();
     private ArrayList<Document> xmlUnir = new ArrayList<>();
@@ -23,11 +25,14 @@ public class Aggregator implements ITarea {
 
     private String Expresion;
     private String Filtro;
+    private Slot slotE;
+    private Slot slotS;
 
     public Aggregator(String Expresion, String Filtro) {
 
         this.Expresion = Expresion;
         this.Filtro = Filtro;
+        this.slotS = new Slot("AggregatorSalida");
     }
 
     @Override
@@ -172,5 +177,15 @@ public class Aggregator implements ITarea {
     @Override
     public int calcularSalidas() {
         return 0;
+    }
+
+    @Override
+    public void enlazarSlotE(Slot slot) {
+        this.slotE = slot;
+    }
+
+    @Override
+    public Slot enlazarSlotS() {
+        return slotS;
     }
 }

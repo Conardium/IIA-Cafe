@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Replicator implements ITarea {
+public class Replicator extends Tarea {
 
-    //Mapa para añadir los tipos de datos.
-    private Map<Integer, ArrayList<Document>> mapaListas;
     //Archivo que se encargará de replicar
     private Document xmlEntrada;
     //Numero de veces que replicará
     private final int numSalidas;
+    private Slot slotE;
+    private ArrayList<Slot> ListaSlotS;
 
     public Replicator(int numSalidas) {
         this.numSalidas = numSalidas;
@@ -37,16 +37,10 @@ public class Replicator implements ITarea {
         xmlEntrada = xmlE;
     }
 
-    @Override
-    public Document setMSJslot(int posicion) {
-        int contador = 0;
-        for (ArrayList<Document> lista : mapaListas.values()) {
-            if (contador == posicion) {
-                return lista.remove(0);
-            }
-            contador++;
+    public void setMSJslot() {
+        for (int i = 0; i < numSalidas; i++) {
+            ListaSlotS.get(i).setMensaje(xmlSalida);
         }
-        return null;
     }
 
     @Override

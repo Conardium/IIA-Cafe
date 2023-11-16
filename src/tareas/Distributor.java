@@ -9,69 +9,62 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Node;
+import slot.Slot;
 
-public class Distributor implements ITarea {
+public class Distributor extends Tarea {
 
-    //Mapa para añadir los tipos de datos.
-    private Map<String, ArrayList<Document>> mapaListas;
     //Archivo que se encargará de distribuir
     private Document xmlEntrada;
     //Cantidad de salidas
     private int nSalidas = 0;
 
+    private Slot slotE;
+    private Map<String, Slot> mapaSalida;
 
     private final String Filtro;
 
     public Distributor(String Filtro) {
         
         this.Filtro = Filtro;
-        mapaListas = new HashMap<>();
+        mapaSalida = new HashMap<>();
     }
 
     @Override
     public void realizarTarea() {
 
-        try {
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            //Recojemos el primer filtro de la lista que indica cual es el parametro a buscar
-            Node NodoPadre = (Node) xPath.compile(Filtro).evaluate(xmlEntrada, XPathConstants.NODE);
+        if(slotE != null) {
+            for (int nXML = 0; nXML < slotE.devolverNConjuntos(); nXML++) {
 
-            String Filtro = NodoPadre.getTextContent();
-            // Obtener la lista correspondiente al filtro
-            ArrayList<Document> listaFiltro = mapaListas.computeIfAbsent(Filtro, k -> new ArrayList<>());
+                getMSJslot();
 
-            // Agregar el mensaje a la lista
-            listaFiltro.add(xmlEntrada);
+                try {
+                    XPath xPath = XPathFactory.newInstance().newXPath();
+                    //Recogemos el primer filtro de la lista que indica cual es el parametro a buscar
+                    Node NodoPadre = (Node) xPath.compile(Filtro).evaluate(xmlEntrada, XPathConstants.NODE);
 
-            //Guardamos el numero de salidas
-            nSalidas = mapaListas.size();
+                    String Filtro = NodoPadre.getTextContent();
+                    // Obtener la lista correspondiente al filtro
+                    Slot slotS = mapaSalida.computeIfAbsent(Filtro, k -> new Slot("DistributorSalida_" + Filtro));
 
-        } catch (XPathExpressionException ex) {
-            ex.printStackTrace();
-        }
-    }
+                    xmlSalida = xmlEntrada;
 
-    @Override
-    public void getMSJslot(Document xmlE) {
-        xmlEntrada = xmlE;
-    }
+                    setMSJslot(slotS);
 
-    @Override
-    public Document setMSJslot(int posicion) {
-        if (posicion < 0 || posicion >= mapaListas.size()) {
-            // La posición no es válida
-            return null;
-        }
-
-        int contador = 0;
-        for (ArrayList<Document> lista : mapaListas.values()) {
-            if (contador == posicion) {
-                return lista.remove(0);
+                } catch (XPathExpressionException ex) {
+                    ex.printStackTrace();
+                }
             }
-            contador++;
-        }
 
-        return null; // No debería llegar aquí, pero se incluye por precaución
+        }
+    }
+
+    public void getMSJslot() {
+        xmlEntrada = slotE.getMensaje();
+
+    }
+
+    public void setMSJslot(Slot slotS) {
+        slotS.setMensaje(xmlSalida);
     }
 
     public int devolverN(int posicion) {
@@ -96,5 +89,20 @@ public class Distributor implements ITarea {
         return nSalidas;
     }
 
+    @Override
+    public void enlazarSlotE(Slot slot) {
+        this.slotE = slot;
+    }
+
+    public Slot enlazarSlotS(int n) {
+        int contador = 0;
+        for (Slot slotS : mapaSalida.values()) {
+            if(contador == n){
+                return slotS;
+            }
+            contador++;
+        }
+        return null;
+    }
 
 }
