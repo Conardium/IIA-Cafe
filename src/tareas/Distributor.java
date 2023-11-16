@@ -15,8 +15,8 @@ public class Distributor extends Tarea {
 
     //Archivo que se encargará de distribuir
     private Document xmlEntrada;
+    private Document xmlSalida;
     //Cantidad de salidas
-    private int nSalidas = 0;
 
     private Slot slotE;
     private Map<String, Slot> mapaSalida;
@@ -24,7 +24,7 @@ public class Distributor extends Tarea {
     private final String Filtro;
 
     public Distributor(String Filtro) {
-        
+
         this.Filtro = Filtro;
         mapaSalida = new HashMap<>();
     }
@@ -56,6 +56,7 @@ public class Distributor extends Tarea {
             }
 
         }
+
     }
 
     public void getMSJslot() {
@@ -65,28 +66,6 @@ public class Distributor extends Tarea {
 
     public void setMSJslot(Slot slotS) {
         slotS.setMensaje(xmlSalida);
-    }
-
-    public int devolverN(int posicion) {
-        if (posicion < 0 || posicion >= mapaListas.size()) {
-            // La posición no es válida
-            return 0; 
-        }
-
-        int contador = 0;
-        for (ArrayList<Document> lista : mapaListas.values()) {
-            if (contador == posicion) {
-                return lista.size();
-            }
-            contador++;
-        }
-
-        return 0; // No debería llegar aquí, pero se incluye por precaución
-    }
-
-    @Override
-    public int calcularSalidas() {
-        return nSalidas;
     }
 
     @Override

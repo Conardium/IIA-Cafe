@@ -5,8 +5,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.*;
 import javax.xml.xpath.*;
 import org.w3c.dom.Document;
+import slot.Slot;
 
-public class Content_Enricher implements ITarea {
+public class Content_Enricher extends Tarea {
+
+    private Slot slotEBody;
+    private Slot slotEContex;
+    private Slot slotS;
 
     private Document xmlEntradaContext;
     private Document xmlEntradaBody;
@@ -18,6 +23,7 @@ public class Content_Enricher implements ITarea {
     public Content_Enricher(String FiltroContexo, String FiltroBody) {
         this.FiltroContexto = FiltroContexo;
         this.FiltroBody = FiltroBody;
+        this.slotS = new Slot("Content_EnricherSalida");
     }
     
 
@@ -98,6 +104,18 @@ public class Content_Enricher implements ITarea {
     @Override
     public int calcularSalidas() {
         return 0;
+    }
+
+    @Override
+    public Slot enlazarSlotS() {
+        return slotS;
+    }
+
+    public void enlazarSlotEContext(Slot slot) {
+        this.slotEContex = slot;
+    }
+    public void enlazarSlotEBody(Slot slot) {
+        this.slotEBody = slot;
     }
 
 }

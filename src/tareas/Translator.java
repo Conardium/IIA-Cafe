@@ -11,10 +11,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
-public class Translator implements ITarea {
+public class Translator extends Tarea {
 
     private Document xmlEntrada;
     private Document xmlSalida;
+
     private final String Filtro;
     private final String Expresion;
 
@@ -76,14 +77,14 @@ public class Translator implements ITarea {
         }
     }
 
-    @Override
-    public void getMSJslot(Document xmlE) {
-        xmlEntrada = xmlE;
+    public void getMSJslot() {
+
+        xmlEntrada = slotE.getMensaje();
     }
 
-    @Override
-    public Document setMSJslot(int v) {
-        return xmlSalida;
+    public void setMSJslot() {
+
+        slotS.setMensaje(xmlSalida);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class ConectorComandas extends Conector {
     }
 
     public int numMensajes() {
-        if (xmlFiles.isEmpty() == true) {
+        if (xmlFiles.isEmpty()) {
             nEllamada = 0;
         }
         return nEllamada;

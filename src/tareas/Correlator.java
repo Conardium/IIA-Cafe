@@ -9,6 +9,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
+import slot.Slot;
 
 /**
  *
@@ -19,11 +20,16 @@ public class Correlator extends Tarea {
     //Mapa para añadir los tipos de datos de entrada.
     private Map<String, ArrayList<Document>> mapaListasE;
 
-   
     private ArrayList<Document> xmlBodyS = new ArrayList<>();
     private ArrayList<Document> xmlContextS = new ArrayList<>();
 
     private int nEllamada = 0;
+
+    private Slot slotEBody;
+    private Slot slotEContext;
+    private Slot slotSBody;
+    private Slot slotSContext;
+
 
     private final String Filtro;
 
@@ -31,6 +37,8 @@ public class Correlator extends Tarea {
 
         this.Filtro = Filtro;
         this.mapaListasE = new HashMap<>();
+        this.slotSBody = new Slot("SlotCorrelatorSalidaBody");
+        this.slotSContext = new Slot("SlotCorrelatorSalidaContext");
     }
 
     @Override
@@ -38,6 +46,8 @@ public class Correlator extends Tarea {
 
         //Se puede hacer más génerico
         //ya que el correlator puede tener muchas entradas y muchas salidas.
+        //pero nosotros asumimos que tiene 2 entradas y 2 salidas, por que
+        //en clase no hemos visto otro tipo.
         
         // Crear iteradores separados para las listas
         Iterator<ArrayList<Document>> IteratorE = mapaListasE.values().iterator();

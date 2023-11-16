@@ -1,6 +1,7 @@
 package tareas;
 
 import org.w3c.dom.Document;
+import slot.Slot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,31 +11,40 @@ public class Replicator extends Tarea {
 
     //Archivo que se encargará de replicar
     private Document xmlEntrada;
+    private Document xmlSalida;
     //Numero de veces que replicará
     private final int numSalidas;
     private Slot slotE;
     private ArrayList<Slot> ListaSlotS;
 
     public Replicator(int numSalidas) {
+
         this.numSalidas = numSalidas;
+        this.ListaSlotS = new ArrayList<>();
+        for (int i = 0; i < numSalidas; i++) {
+            ListaSlotS.add(new Slot("ReplicatorSalida_" + i));
+        }
     }
 
     @Override
     public void realizarTarea() {
 
-        mapaListas = new HashMap<>();
+        if(slotE != null) {
 
-        for (int i = 0; i < numSalidas; i++) {
-            mapaListas.put(i, new ArrayList<>());
-            ArrayList<Document> Replicas = mapaListas.get(i);
-            Replicas.add(xmlEntrada);
+            for (int nXML = 0; nXML < slotE.devolverNConjuntos(); nXML++) {
+
+                getMSJslot();
+                xmlSalida = xmlEntrada;
+                setMSJslot();
+            }
+
         }
 
     }
 
-    @Override
-    public void getMSJslot(Document xmlE) {
-        xmlEntrada = xmlE;
+    public void getMSJslot() {
+
+        xmlEntrada = slotE.getMensaje();
     }
 
     public void setMSJslot() {
@@ -47,4 +57,14 @@ public class Replicator extends Tarea {
     public int calcularSalidas() {
         return 0;
     }
+
+    @Override
+    public void enlazarSlotE(Slot slot) {
+        this.slotE = slot;
+    }
+
+    public Slot enlazarSlotS(int n) {
+        return ListaSlotS.get(n);
+    }
+
 }

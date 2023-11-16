@@ -8,20 +8,31 @@ import java.util.ArrayList;
 import org.w3c.dom.Document;
 import slot.Slot;
 
-public class Splitter implements ITarea {
+public class Splitter extends Tarea {
+
+    private Slot slotE;
+    private Slot slotS;
 
     private Document xmlEntrada;
     private ArrayList<Document> xmlSalida = new ArrayList<>();
+
     private int nEllamada = 0;
     private final String Expresion;
 
     public Splitter(String Expresion) {
         this.Expresion = Expresion;
+        this.slotS = new Slot("SplitterSalida");
     }
 
     @Override
     public void realizarTarea() {
-        try {
+
+        if(slotE != null){
+        for (int nXML = 0; nXML < slotE.devolverNConjuntos(); nXML++) {
+
+            getMSJslot();
+
+            try {
 
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -97,9 +108,10 @@ public class Splitter implements ITarea {
         xmlEntrada = slotE.getMensaje();
     }
 
-    @Override
-    public Document setMSJslot(int v) {
-        return xmlSalida.remove(0);
+    public void setMSJslot() {
+        for (int i = 0; i < nEllamada; i++) {
+            slotS.setMensaje(xmlSalida.remove(i));
+        }
     }
 
     public int devolverNConjuntos() {
@@ -120,5 +132,6 @@ public class Splitter implements ITarea {
     public Slot enlazarSlotS() {
         return slotS;
     }
+
 
 }
