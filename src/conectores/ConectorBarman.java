@@ -92,7 +92,7 @@ public class ConectorBarman extends Conector {
     }
 
     //Recogemos el mensaje del puerto
-    public void leerMensaje() {
+    public void escribirPuerto() {
         puerto.setPuertoS(devolverSQL());
     }
 

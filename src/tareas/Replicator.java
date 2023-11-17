@@ -41,12 +41,12 @@ public class Replicator extends Tarea {
         }
 
     }
-
+    @Override
     public void getMSJslot() {
 
         xmlEntrada = slotE.getMensaje();
     }
-
+    @Override
     public void setMSJslot() {
         for (int i = 0; i < numSalidas; i++) {
             ListaSlotS.get(i).setMensaje(xmlSalida);
@@ -64,7 +64,7 @@ public class Replicator extends Tarea {
     }
 
     public Slot enlazarSlotS(int n) {
-        return ListaSlotS.get(n);
+        return ListaSlotS.get(n-1);
     }
 
 }

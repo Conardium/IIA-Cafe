@@ -24,41 +24,50 @@ public class Content_Enricher extends Tarea {
 
     @Override
     public void realizarTarea() {
+        if (slotEContext != null && slotEBody != null) {
+            for (int nXML = 0; nXML < slotEContext.devolverNConjuntos(); nXML++) {
 
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            XPath xPath = XPathFactory.newInstance().newXPath();
+                getMSJslot();
 
-            // Evaluar la expresión XPath para obtener el nodo del contexto
-            XPathExpression expr = xPath.compile(FiltroContexto);
-            Node nodoAnadir = (Node) expr.evaluate(xmlEntradaContext, XPathConstants.NODE);
+                try {
+                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                    XPath xPath = XPathFactory.newInstance().newXPath();
 
-            //Creamos nuevo documento XML
-            Document xmlOut = dBuilder.newDocument();
+                    // Evaluar la expresión XPath para obtener el nodo del contexto
+                    XPathExpression expr = xPath.compile(FiltroContexto);
+                    Node nodoAnadir = (Node) expr.evaluate(xmlEntradaContext, XPathConstants.NODE);
 
-            //Cogemos todos los nodos del Body
-            Node nodoAux = xmlOut.importNode(xmlEntradaBody.getFirstChild(), true);
-            xmlOut.appendChild(nodoAux);
-            
-            String nombreNodo[] = FiltroBody.split("//");
-            
-            // Busqueda del nodo del que será hijo
-            Node nodoPadreBuscado = buscarNodoBody(nodoAux,nombreNodo[1]);
-            // Importamos el nodo del contexto
-            Node nodoHijoBuscado = xmlOut.importNode(nodoAnadir, true);
-            // Lo hacemos hijo
-            nodoPadreBuscado.appendChild(nodoHijoBuscado);
+                    //Creamos nuevo documento XML
+                    Document xmlOut = dBuilder.newDocument();
 
-            //Lo colocamos en la salida
-            xmlSalida = xmlOut;
+                    //Cogemos todos los nodos del Body
+                    Node nodoAux = xmlOut.importNode(xmlEntradaBody.getFirstChild(), true);
+                    xmlOut.appendChild(nodoAux);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                    String nombreNodo[] = FiltroBody.split("//");
+
+                    // Busqueda del nodo del que será hijo
+                    Node nodoPadreBuscado = buscarNodoBody(nodoAux, nombreNodo[1]);
+                    // Importamos el nodo del contexto
+                    Node nodoHijoBuscado = xmlOut.importNode(nodoAnadir, true);
+                    // Lo hacemos hijo
+                    nodoPadreBuscado.appendChild(nodoHijoBuscado);
+
+                    //Lo colocamos en la salida
+                    xmlSalida = xmlOut;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                setMSJslot();
+            }
+
         }
-
     }
-    private static Node buscarNodoBody(Node nodoActual, String nombre) {
+
+    private Node buscarNodoBody(Node nodoActual, String nombre) {
         // Verificar si el nodo actual es el que estamos buscando
         if (nodoActual != null && nodoActual.getNodeName().equalsIgnoreCase(nombre)) {
             return nodoActual;
@@ -78,27 +87,17 @@ public class Content_Enricher extends Tarea {
 
         return null; // Devolver null si no se encuentra el nodo
     }
-    
 
     @Override
-    public void getMSJslot(Document xmlE) {
+    public void getMSJslot() {
 
-        if ("result".equals(xmlE.getFirstChild().getNodeName())) {
-            xmlEntradaContext = xmlE;
-        } else {
-            xmlEntradaBody = xmlE;
-        }
+        xmlEntradaBody = slotEBody.getMensaje();
+        xmlEntradaContext = slotEContext.getMensaje();
     }
-
     @Override
-    public Document setMSJslot(int v) {
+    public void setMSJslot() {
 
-        return xmlSalida;
-    }
-    
-    @Override
-    public int calcularSalidas() {
-        return 0;
+        slotS.setMensaje(xmlSalida);
     }
 
     @Override

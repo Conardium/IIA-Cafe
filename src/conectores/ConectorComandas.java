@@ -62,8 +62,12 @@ public class ConectorComandas extends Conector {
         }
     }
 
+    public PuertoEoS getPuerto(){
+        return puerto;
+    }
+
     //Colocamos en el puerto el xml
-    public void leerMensaje() {
+    public void escribirMensaje() {
 
         puerto.setPuerto(xmlFiles.remove(0));
     }

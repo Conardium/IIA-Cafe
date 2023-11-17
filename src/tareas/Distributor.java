@@ -55,7 +55,7 @@ public class Distributor extends Tarea {
         }
 
     }
-
+    @Override
     public void getMSJslot() {
         xmlEntrada = slotE.getMensaje();
 
@@ -71,7 +71,7 @@ public class Distributor extends Tarea {
     }
 
     public Slot enlazarSlotS(int n) {
-        int contador = 0;
+        int contador = 1;
         for (Slot slotS : mapaSalida.values()) {
             if(contador == n){
                 return slotS;

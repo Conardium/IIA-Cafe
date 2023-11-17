@@ -33,58 +33,62 @@ public class Aggregator extends Tarea {
     @Override
     public void realizarTarea() {
 
-        boolean encontrado = false;
-        int contador = 0;
-        int contadorXMLs = 1;
-        String id_Unir = "0";
-        XPath xPath = XPathFactory.newInstance().newXPath();
+        if (slotE != null) {
 
-        //Intentamos recoger todos los XML que sean del mismo id hasta su tamaño
-        while (contador < xmlEntrada.size() && encontrado == false) {
-            try {
-                //Mientras el contador sea menor a todos los que hay
-                xmlUnir = new ArrayList<>();//Reinicio la lista
-                contador = 0;
-                contadorXMLs = 1;
+            getMSJslot();
 
-                //Meto el primero en la lista y pillo su id y el numero de trozos
-                xmlUnir.add(xmlEntrada.get(contador));
+            for (int nXML = 0; nXML < xmlEntrada.size(); nXML++) {
 
-                // Evaluar la expresión XPath para obtener el id (o algo que lo identifique)
-                XPathExpression expr = xPath.compile(Filtro);
-                double id = (double) expr.evaluate(xmlEntrada.get(contador), XPathConstants.NUMBER);
-                // Evaluar la expresión XPath para obtener el numero de elementos
-                expr = xPath.compile("//size/text()");
-                double size = (double) expr.evaluate(xmlEntrada.get(contador), XPathConstants.NUMBER);
+                boolean encontrado = false;
+                int contador = 0;
+                int contadorXMLs = 1;
+                String id_Unir = "0";
+                XPath xPath = XPathFactory.newInstance().newXPath();
 
-                //Para la cabecera
-                id_Unir = String.valueOf(id);
+                //Intentamos recoger todos los XML que sean del mismo id hasta su tamaño
+                while (contador < xmlEntrada.size() && !encontrado) {
+                    try {
+                        //Mientras el contador sea menor a todos los que hay
+                        xmlUnir = new ArrayList<>();//Reinicio la lista
+                        contador = 0;
+                        contadorXMLs = 1;
 
-                //A partir del siguiente empezamos a buscar
-                int j = contador + 1;
-                //Si el contadorXML es igual al numero pues salimos, o si nos quedamos sin entrada
-                while (j < xmlEntrada.size() && contadorXMLs < size) {
-                    //Si es del mismo id lo agregamos
-                    if (Integer.parseInt(xmlEntrada.get(j).getFirstChild().getFirstChild().getTextContent()) == id) {
-                        xmlUnir.add(xmlEntrada.get(j));
-                        contadorXMLs++;
+                        //Meto el primero en la lista y pillo su id y el numero de trozos
+                        xmlUnir.add(xmlEntrada.get(contador));
+
+                        // Evaluar la expresión XPath para obtener el id (o algo que lo identifique)
+                        XPathExpression expr = xPath.compile(Filtro);
+                        double id = (double) expr.evaluate(xmlEntrada.get(contador), XPathConstants.NUMBER);
+                        // Evaluar la expresión XPath para obtener el numero de elementos
+                        expr = xPath.compile("//size/text()");
+                        double size = (double) expr.evaluate(xmlEntrada.get(contador), XPathConstants.NUMBER);
+
+                        //Para la cabecera
+                        id_Unir = String.valueOf(id);
+
+                        //A partir del siguiente empezamos a buscar
+                        int j = contador + 1;
+                        //Si el contadorXML es igual al numero pues salimos, o si nos quedamos sin entrada
+                        while (j < xmlEntrada.size() && contadorXMLs < size) {
+                            //Si es del mismo id lo agregamos
+                            if (Integer.parseInt(xmlEntrada.get(j).getFirstChild().getFirstChild().getTextContent()) == id) {
+                                xmlUnir.add(xmlEntrada.get(j));
+                                contadorXMLs++;
+                            }
+                            j++;
+                        }
+                        //Encontro un conjunto bueno
+                        if (contadorXMLs == size) {
+
+                            encontrado = true;
+                        }
+                        //Sigo buscando
+                        contador++;
+                    } catch (XPathExpressionException ex) {
                     }
-                    j++;
                 }
-                //Encontro un conjunto bueno
-                if (contadorXMLs == size) {
-
-                    encontrado = true;
-                }
-                //Sigo buscando
-                contador++;
-            } catch (XPathExpressionException ex) {
-                Logger.getLogger(Aggregator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (encontrado) {
-            try {
+                if (encontrado) {
+                    try {
 
                     //Pillamos el primer nodo y lo hacemos padre, luego, simplemente cogemos los nodos drink: "//drinks//drink" pasado por parametro
                     //y lo añadimos al nodo drinks (buscamos recursivamente)
@@ -126,8 +130,12 @@ public class Aggregator extends Tarea {
 
                     xmlSalida = xmlOut;
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                    } catch (Exception e) {
+                     e.printStackTrace();
+                    }
+                }
+
+                setMSJslot();
             }
         }
     }
@@ -152,26 +160,17 @@ public class Aggregator extends Tarea {
 
         return null; // Devolver null si no se encuentra el nodo
     }
-
     @Override
-    public void getMSJslot(Document xmlE) {
+    public void getMSJslot() {
 
-        xmlEntrada.add(xmlE);
+        for (int i = 0; i < slotE.devolverNConjuntos(); i++) {
+            xmlEntrada.add(slotE.getMensaje());
+        }
     }
-
     @Override
-    public Document setMSJslot(int v) {
+    public void setMSJslot() {
 
-        return xmlSalida;
-    }
-
-    public int devolverNConjuntos() {
-        return xmlEntrada.size();
-    }
-
-    @Override
-    public int calcularSalidas() {
-        return 0;
+        slotS.setMensaje(xmlSalida);
     }
 
     @Override

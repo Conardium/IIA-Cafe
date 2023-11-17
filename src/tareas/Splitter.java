@@ -102,11 +102,12 @@ public class Splitter extends Tarea {
             }
         }
     }
-
+    @Override
     public void getMSJslot() {
+
         xmlEntrada = slotE.getMensaje();
     }
-
+    @Override
     public void setMSJslot() {
         for (int i = 0; i < nEllamada; i++) {
             slotS.setMensaje(xmlSalida.remove(i));

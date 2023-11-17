@@ -11,9 +11,9 @@ public abstract class Tarea {
 
     public void realizarTarea(){};
 
-    public void getMSJslot(Document xmlE){};
+    public void getMSJslot(){};
 
-    public Document setMSJslot(int v){return null;};
+    public void setMSJslot(){};
     
     public int calcularSalidas(){return 0;};
 

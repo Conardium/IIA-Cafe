@@ -73,12 +73,12 @@ public class Translator extends Tarea {
             }
         }
     }
-
+    @Override
     public void getMSJslot() {
 
         xmlEntrada = slotE.getMensaje();
     }
-
+    @Override
     public void setMSJslot() {
 
         slotS.setMensaje(xmlSalida);

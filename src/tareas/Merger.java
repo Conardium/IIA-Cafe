@@ -27,9 +27,12 @@ public class Merger extends Tarea {
     public void realizarTarea() {
 
         if(!mapaSlotsE.isEmpty()){
-            //MAL
-            for (int nXML = 0; nXML < mapaSlotsE.size(); nXML++) {
-                xmlSalida.add(xmlEntrada);
+            for (Slot slotS : mapaSlotsE.values()) {
+                for (int nXML = 0; nXML < slotS.devolverNConjuntos(); nXML++) {
+                    getMSJslot();
+                    xmlSalida.add(xmlEntrada);
+                    setMSJslot();
+                }
             }
         }
 

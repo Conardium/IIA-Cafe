@@ -31,6 +31,10 @@ public class PuertoES {
         slotS.setMensaje(xmlFile);
     }
 
+    public int nMensajes(){
+        return slotE.devolverNConjuntos();
+    }
+
     //Asociamos el puerto de entrada
     public void enlazarSlotE(Slot slot){
         this.slotE = slot;

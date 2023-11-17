@@ -48,7 +48,8 @@ public class Controlador {
     //************Tareas**************//
     static Splitter TSplitter = new Splitter(ExpresionSplitter);
     static Distributor TDistributor = new Distributor(FiltroDistributor);
-    static Replicator TReplicator = new Replicator(2);
+    static Replicator TReplicatorC = new Replicator(2);
+    static Replicator TReplicatorH = new Replicator(2);
     static Translator TTranslatorC = new Translator(FiltroTranslator,ExpresionTranslator);
     static Translator TTranslatorH = new Translator(FiltroTranslator,ExpresionTranslator);
     static Correlator TCorrelatorC = new Correlator(FiltroCorrelator);
@@ -58,31 +59,43 @@ public class Controlador {
     static Merger TMerger = new Merger();
     static Aggregator TAggregator = new Aggregator(ExpresionAggregator,FiltroAgregator);
 
-    //main//
-    public static void main(String[] args) {
+    //Constructor//
+    public Controlador() {
 
+        //Enlazamos los slots;
+        TSplitter.enlazarSlotE(CInicial.getPuerto().enlazarSlotS());
+        TDistributor.enlazarSlotE(TSplitter.enlazarSlotS());
+        TReplicatorC.enlazarSlotE(TDistributor.enlazarSlotS(1));
+        TReplicatorH.enlazarSlotE(TDistributor.enlazarSlotS(2));
+        TTranslatorC.enlazarSlotE(TReplicatorC.enlazarSlotS(1));
+        TTranslatorH.enlazarSlotE(TReplicatorH.enlazarSlotS(1));
+        cBC.getPuerto().enlazarSlotE(TTranslatorC.enlazarSlotS());
+        cBH.getPuerto().enlazarSlotE(TTranslatorH.enlazarSlotS());
+        TCorrelatorC.enlazarSlotE(cBC.getPuerto().enlazarSlotS(),1);
+        TCorrelatorH.enlazarSlotE(cBH.getPuerto().enlazarSlotS(),1);
+        TCorrelatorC.enlazarSlotE(TReplicatorC.enlazarSlotS(2),2);
+        TCorrelatorH.enlazarSlotE(TReplicatorH.enlazarSlotS(2),2);
+        TCEnricherC.enlazarSlotEContext(TCorrelatorC.enlazarSlotS(1));
+        TCEnricherC.enlazarSlotEBody(TCorrelatorC.enlazarSlotS(2));
+        TCEnricherH.enlazarSlotEContext(TCorrelatorH.enlazarSlotS(1));
+        TCEnricherH.enlazarSlotEBody(TCorrelatorH.enlazarSlotS(2));
+        TMerger.enlazarSlotE(TCEnricherC.enlazarSlotS());
+        TMerger.enlazarSlotE(TCEnricherH.enlazarSlotS());
+        TAggregator.enlazarSlotE(TMerger.enlazarSlotS());
+        cCam.getPuerto().enlazarSlotE(TAggregator.enlazarSlotS());
 
         //Cargamos Datos
         if (CInicial.CargarBD(TablaInicial, sgbd, ip, service_bd, usuario, password)) {
             for (int i = 1; i <= CInicial.numMensajes(); i++) {
 
                 //=====> Escribimos los Mensajes en el puerto Inicial del 1 al 9
-                P_Inicial.setPuerto(CInicial.leerMensaje()); //FUNCIONANDO
-                SInicial.setMensaje(P_Inicial.getPuerto()); //FUNCIONANDO
+                CInicial.escribirMensaje();
 
                 //***************************************************//
                 //********************SPLITTER***********************//
                 //***************************************************//
                 //=====> Actua el Splitter
-                TSplitter.getMSJslot(SInicial.getMensaje()); //FUNCIONANDO
-                TSplitter.realizarTarea(); //FUNCIONANDO
-                for (int j = 0; j < TSplitter.devolverNConjuntos(); j++) {
-                    S2.setMensaje(TSplitter.setMSJslot(0));//FUNCIONANDO
-                }
-
-                //***************************************************//
-                //***************************************************//
-                //***************************************************//
+                TSplitter.realizarTarea();
 
                 //***************************************************//
                 //******************DISTRIBUTOR**********************//
@@ -94,49 +107,30 @@ public class Controlador {
                 //******************REPLICATOR***********************//
                 //***************************************************//
                 //=====> Actua el Replicator para los cold
-                for (int j = 0; j < S3C.devolverNConjuntos(); j++) {
-                    TReplicator.getMSJslot(S3C.getMensaje());
-                    TReplicator.realizarTarea(); //Multiplica la cantidad
-                    S4C.setMensaje(TReplicator.setMSJslot(0));
-                    S5C.setMensaje(TReplicator.setMSJslot(1));
-                }
+                TReplicatorC.realizarTarea(); //Multiplica la cantidad
                 //=====> Actua el Replicator para los hot
-                for (int j = 0; j < S3H.devolverNConjuntos(); j++) {
-                    TReplicator.getMSJslot(S3H.getMensaje());
-                    TReplicator.realizarTarea(); //Multiplica la cantidad
-                    S4H.setMensaje(TReplicator.setMSJslot(0));
-                    S5H.setMensaje(TReplicator.setMSJslot(1));
-                }
-
-                //***************************************************//
-                //***************************************************//
-                //***************************************************//
+                TReplicatorH.realizarTarea(); //Multiplica la cantidad
 
                 //***************************************************//
                 //******************TRANSLATOR***********************//
                 //***************************************************//
                 //=====> Actua el Translator cold
-                for (int j = 0; j < S4C.devolverNConjuntos(); j++) {
-                    TTranslatorC.getMSJslot(S4C.getMensaje());
-                    TTranslatorC.realizarTarea();
-                    S6C.setMensaje(TTranslatorC.setMSJslot(0));
-                }
-
+                TTranslatorC.realizarTarea();
                 //=====> Actua el Translator hot
                 TTranslatorH.realizarTarea();
 
                 //***************************************************//
-                //***************************************************//
+                //*****************PUERTO CAMARERO*******************//
                 //***************************************************//
                 //========> Puerto lee mensajes cold, el conector los lee y los transforma
 
 
                 //========> Conector escribe mensajes cold, el puerto los pasa al slot
-                for (int j = 0; j < cBC.getTotal(); j++) {
-                    P_ES_Cold.setPuerto(cBC.devolverSQL());
-                    S7C.setMensaje(P_ES_Cold.getPuerto());
+                while(cBC.getPuerto().nMensajes() != 0) {
+                    cBC.leerPuerto();
+                    cBC.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
+                    cBC.escribirPuerto();
                 }
-
                 //========> Puerto lee mensajes hot, el conector los lee y los transforma
                 cBH.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
 
@@ -151,41 +145,17 @@ public class Controlador {
                 //******************CORRELATOR***********************//
                 //***************************************************//
                 //=====> Actua el Correlator cold
-                for (int j = 0; j < S5C.devolverNConjuntos(); j++) { //puede ser tambien S7C.devolverNConjuntos()
-                    TCorrelatorC.getMSJslot(S5C.getMensaje());
-                    TCorrelatorC.getMSJslot(S7C.getMensaje());
-                }
                 TCorrelatorC.realizarTarea();
 
-                for (int j = 0; j < TCorrelatorC.devolverNConjuntos(); j++) {
-                    S8C.setMensaje(TCorrelatorC.setMSJslot(1));
-                    S9C.setMensaje(TCorrelatorC.setMSJslot(2));
-                }
                 //=====> Actua el Correlator hot
-                for (int j = 0; j < S5H.devolverNConjuntos(); j++) { //puede ser tambien S7C.devolverNConjuntos()
-                    TCorrelatorH.getMSJslot(S5H.getMensaje());
-                    TCorrelatorH.getMSJslot(S7H.getMensaje());
-                }
                 TCorrelatorH.realizarTarea();
-                for (int j = 0; j < TCorrelatorH.devolverNConjuntos(); j++) {
-                    S8H.setMensaje(TCorrelatorH.setMSJslot(1));
-                    S9H.setMensaje(TCorrelatorH.setMSJslot(2));
-                }
-                //***************************************************//
-                //***************************************************//
-                //***************************************************//
+
 
                 //***************************************************//
                 //***************CONTEXT_ENRICHER********************//
                 //***************************************************//
                 //=====> Actua el Content Enricher cold
-                for (int j = 0; j < S8C.devolverNConjuntos(); j++) {
-
-                    TCEnricherC.getMSJslot(S8C.getMensaje());
-                    TCEnricherC.getMSJslot(S9C.getMensaje());
-                    TCEnricherC.realizarTarea();
-                    S10C.setMensaje(TCEnricherC.setMSJslot(0));
-                }
+                TCEnricherC.realizarTarea();
 
                 //=====> Actua el Content Enricher hot
                 TCEnricherH.realizarTarea();
@@ -193,23 +163,8 @@ public class Controlador {
                 //***************************************************//
                 //**********************MERGER***********************//
                 //***************************************************//
-                //=====> Actua el Merger para los cold
-                for (int j = 0; j < S10C.devolverNConjuntos(); j++) {
-                    TMerger.getMSJslot(S10C.getMensaje());
-                    TMerger.realizarTarea();
-                    S11.setMensaje(TMerger.setMSJslot(0));
-                }
-
-                //=====> Actua el Merger para los hot
-                for (int j = 0; j < S10H.devolverNConjuntos(); j++) {
-                    TMerger.getMSJslot(S10H.getMensaje());
-                    TMerger.realizarTarea();
-                    S11.setMensaje(TMerger.setMSJslot(0));
-                }
-
-                //***************************************************//
-                //***************************************************//
-                //***************************************************//
+                //=====> Actua el Merger
+                TMerger.realizarTarea();
 
                 //***************************************************//
                 //********************AGGREGATOR*********************//
@@ -225,6 +180,7 @@ public class Controlador {
                 Scanner scanner = new Scanner(System.in);
                 scanner.nextLine();
             }
+
             //Borramos la BD
             System.out.println("Vamos a Borrar los mensajes finales de la BD");
             System.out.println("Presiona Enter para continuar...");
