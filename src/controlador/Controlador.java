@@ -7,6 +7,7 @@ package controlador;
 import conectores.ConectorBarman;
 import conectores.ConectorCamarero;
 import conectores.ConectorComandas;
+import puertos.PuertoEoS;
 import slot.Slot;
 import tareas.*;
 import java.util.Scanner;
@@ -43,29 +44,6 @@ public class Controlador {
     static ConectorBarman cBH = new ConectorBarman();
     static ConectorCamarero cCam = new ConectorCamarero();
 
-
-
-    //************Slots**********//
-    static Slot SInicial = new Slot("Inicial");
-    static Slot S2 = new Slot("S2");
-    static Slot S3C = new Slot("3C");
-    static Slot S3H = new Slot("3H");
-    static Slot S4C = new Slot("4C");
-    static Slot S4H = new Slot("4H");
-    static Slot S5C = new Slot("5C");
-    static Slot S5H = new Slot("5H");
-    static Slot S6C = new Slot("6C");
-    static Slot S6H = new Slot("6H");
-    static Slot S7C = new Slot("7C");
-    static Slot S7H = new Slot("7H");
-    static Slot S8C = new Slot("8C");
-    static Slot S8H = new Slot("8H");
-    static Slot S9C = new Slot("9C");
-    static Slot S9H = new Slot("9H");
-    static Slot S10C = new Slot("10C");
-    static Slot S10H = new Slot("10H");
-    static Slot S11 = new Slot("11");
-    static Slot SFinal = new Slot("Final");
 
     //************Tareas**************//
     static Splitter TSplitter = new Splitter(ExpresionSplitter);
@@ -110,22 +88,7 @@ public class Controlador {
                 //******************DISTRIBUTOR**********************//
                 //***************************************************//
                 //=====> Actua el Distributor
-                for (int j = 0; j < S2.devolverNConjuntos(); j++) {
-                    TDistributor.getMSJslot(S2.getMensaje());
-                    TDistributor.realizarTarea();
-                }
-                //=====> coloca en el slot el Distributor para los cold
-                while (TDistributor.devolverN(0) > 0) {
-                    S3C.setMensaje(TDistributor.setMSJslot(0));
-                }
-                //=====> coloca en el slot el Distributor para los hot
-                while (TDistributor.devolverN(1) > 0) {
-                    S3H.setMensaje(TDistributor.setMSJslot(1));
-                }
-
-                //***************************************************//
-                //***************************************************//
-                //***************************************************//
+                TDistributor.realizarTarea();
 
                 //***************************************************//
                 //******************REPLICATOR***********************//
@@ -160,21 +123,14 @@ public class Controlador {
                 }
 
                 //=====> Actua el Translator hot
-                for (int j = 0; j < S4H.devolverNConjuntos(); j++) {
-                    TTranslatorH.getMSJslot(S4H.getMensaje());
-                    TTranslatorH.realizarTarea();
-                    S6H.setMensaje(TTranslatorH.setMSJslot(0));
-                }
+                TTranslatorH.realizarTarea();
 
                 //***************************************************//
                 //***************************************************//
                 //***************************************************//
                 //========> Puerto lee mensajes cold, el conector los lee y los transforma
-                for (int j = 0; j < S6C.devolverNConjuntos(); j++) {
-                    P_ES_Cold.setPuerto(S6C.getMensaje());
-                    cBC.escribirMensaje(P_ES_Cold.getPuerto());
-                    cBC.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
-                }
+
+
                 //========> Conector escribe mensajes cold, el puerto los pasa al slot
                 for (int j = 0; j < cBC.getTotal(); j++) {
                     P_ES_Cold.setPuerto(cBC.devolverSQL());
@@ -182,15 +138,13 @@ public class Controlador {
                 }
 
                 //========> Puerto lee mensajes hot, el conector los lee y los transforma
-                for (int j = 0; j < S6H.devolverNConjuntos(); j++) {
-                    P_ES_Hot.setPuerto(S6H.getMensaje());
-                    cBH.escribirMensaje(P_ES_Hot.getPuerto());
-                    cBH.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
-                }
+                cBH.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
+
                 //========> Conector escribe mensajes hot, el puerto los pasa al slot
-                for (int j = 0; j < cBH.getTotal(); j++) {
-                    P_ES_Hot.setPuerto(cBH.devolverSQL());
-                    S7H.setMensaje(P_ES_Hot.getPuerto());
+                while (cBH.getPuerto().nMensajes() != 0) {
+                    cBH.leerPuerto();
+                    cBH.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
+                    cBH.escribirPuerto();
                 }
 
                 //***************************************************//
@@ -234,16 +188,8 @@ public class Controlador {
                 }
 
                 //=====> Actua el Content Enricher hot
-                for (int j = 0; j < S8H.devolverNConjuntos(); j++) {
-                    TCEnricherH.getMSJslot(S8H.getMensaje());
-                    TCEnricherH.getMSJslot(S9H.getMensaje());
-                    TCEnricherH.realizarTarea();
-                    S10H.setMensaje(TCEnricherH.setMSJslot(0));
-                }
+                TCEnricherH.realizarTarea();
 
-                //***************************************************//
-                //***************************************************//
-                //***************************************************//
                 //***************************************************//
                 //**********************MERGER***********************//
                 //***************************************************//
@@ -268,27 +214,10 @@ public class Controlador {
                 //***************************************************//
                 //********************AGGREGATOR*********************//
                 //***************************************************//
-                //=====> Actua el Aggregator
-                for (int j = 0; j < S11.devolverNConjuntos(); j++) {
-
-                    TAggregator.getMSJslot(S11.getMensaje());
-                }
-                //Mientras queden documentos en su entrada que siga
-                //Esto no hace falta realmente, porque todo esta dentro del for
-                //Por lo tanto en una simple llamada a realizarTarea se quedará sin XMLEntrada
-                while (TAggregator.devolverNConjuntos() != 0) {
-                    TAggregator.realizarTarea();
-                    SFinal.setMensaje(TAggregator.setMSJslot(0));
-                }
-
-                //***************************************************//
-                //***************************************************//
-                //***************************************************//
-                //=====> Escribimos los Mensajes en el puerto Final
-                P_Final.setPuerto(SFinal.getMensaje());
+                TAggregator.realizarTarea();
 
                 //=====> El conector Camarero recoge los datos del puerto Final
-                cCam.escribirMensaje(P_Final.getPuerto());
+                cCam.escribirMensaje();
                 // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
                 cCam.anadirMensajeBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
 
@@ -303,10 +232,6 @@ public class Controlador {
             scanner.nextLine();
             cCam.borrarBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
         }
-
-        // ===== PARA COMPROBAR SI LA INFORMACION DEL DOCUMENTO LLEGA BIEN ======
-        /*System.out.println(Mensaje.getFirstChild().getFirstChild().getNodeName()  + " "
-                + Mensaje.getFirstChild().getFirstChild().getTextContent());*/
     }
 
 }

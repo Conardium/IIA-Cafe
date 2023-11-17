@@ -25,11 +25,7 @@ public class Correlator extends Tarea {
 
     private int nEllamada = 0;
 
-    private Slot slotEBody;
-    private Slot slotEContext;
-    private Slot slotSBody;
-    private Slot slotSContext;
-
+    private Slot slotEContext, slotEBody, slotSContext, slotSBody;
 
     private final String Filtro;
 
@@ -117,18 +113,6 @@ public class Correlator extends Tarea {
         } else {
             return null;
         }
-    }
-
-    public int devolverNConjuntos() {
-        if (xmlContextS.size() == 0) {
-            nEllamada = 0;
-        }
-        return nEllamada;
-    }
-
-    @Override
-    public int calcularSalidas() {
-        return 0;
     }
 
 

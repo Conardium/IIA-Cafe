@@ -35,17 +35,18 @@ public class Merger extends Tarea {
 
 
     }
-
     @Override
-    public void getMSJslot(Document xmlE) {
-
-        xmlEntrada = xmlE;
+    public void getMSJslot() {
+        for (Slot slotS : mapaSlotsE.values()) {
+            if(slotS.devolverNConjuntos() != 0){
+                xmlEntrada = slotS.getMensaje();
+            }
+        }
     }
 
     @Override
-    public Document setMSJslot(int v) {
-
-        return xmlSalida.remove(0);
+    public void setMSJslot() {
+        slotS.setMensaje(xmlSalida.get(0));
     }
 
     @Override
@@ -57,6 +58,7 @@ public class Merger extends Tarea {
     public Slot enlazarSlotS() {
         return slotS;
     }
+
     public void enlazarSlotE(Slot slotE) {
 
             mapaSlotsE.put(contador, slotE);

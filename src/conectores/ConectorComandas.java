@@ -14,10 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- *
- * @author Cristian
- */
 public class ConectorComandas extends Conector {
 
     private int id = 0;

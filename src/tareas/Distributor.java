@@ -13,10 +13,7 @@ import slot.Slot;
 
 public class Distributor extends Tarea {
 
-    //Archivo que se encargará de distribuir
-    private Document xmlEntrada;
-    private Document xmlSalida;
-    //Cantidad de salidas
+    private Document xmlEntrada, xmlSalida;
 
     private Slot slotE;
     private Map<String, Slot> mapaSalida;

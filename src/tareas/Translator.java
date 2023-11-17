@@ -13,14 +13,11 @@ import javax.xml.xpath.XPathFactory;
 
 public class Translator extends Tarea {
 
-    private Document xmlEntrada;
-    private Document xmlSalida;
+    private Document xmlEntrada, xmlSalida;
 
-    private final String Filtro;
-    private final String Expresion;
+    private final String Filtro, Expresion;
 
-    private Slot slotE;
-    private Slot slotS;
+    private Slot slotE, slotS;
     
     public Translator(String Filtro, String Expresion)
     {

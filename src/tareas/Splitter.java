@@ -10,8 +10,7 @@ import slot.Slot;
 
 public class Splitter extends Tarea {
 
-    private Slot slotE;
-    private Slot slotS;
+    private Slot slotE, slotS;
 
     private Document xmlEntrada;
     private ArrayList<Document> xmlSalida = new ArrayList<>();

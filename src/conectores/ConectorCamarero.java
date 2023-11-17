@@ -69,6 +69,10 @@ public class ConectorCamarero extends Conector {
 
     }
 
+    public PuertoEoS getPuerto(){
+        return puerto;
+    }
+
     //Recogemos el mensaje del puerto
     public void escribirMensaje() {
 
@@ -118,7 +122,7 @@ public class ConectorCamarero extends Conector {
 
             return true;
         } catch (Exception ex) {
-            System.out.println("Error en Conector Camarero");
+            System.out.println("Error en Conector Camarero - No se han podido borrar las tablas de la BD");
             return false;
         }
     }

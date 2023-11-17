@@ -7,10 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- *
- * @author Cristian
- */
 public abstract class Conector {
 
     private Connection conn = null;

@@ -13,20 +13,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
 
-/**
- *
- * @author Cristian
- */
+
 public class Aggregator extends Tarea {
 
     private ArrayList<Document> xmlEntrada = new ArrayList<>();
     private ArrayList<Document> xmlUnir = new ArrayList<>();
     private Document xmlSalida;
 
-    private String Expresion;
-    private String Filtro;
-    private Slot slotE;
-    private Slot slotS;
+    private String Expresion, Filtro;
+    private Slot slotE, slotS;
 
     public Aggregator(String Expresion, String Filtro) {
 
@@ -91,45 +86,45 @@ public class Aggregator extends Tarea {
         if (encontrado) {
             try {
 
-                //Pillamos el primer nodo y lo hacemos padre, luego, simplemente cogemos los nodos drink: "//drinks//drink" pasado por parametro
-                //y lo añadimos al nodo drinks (buscamos recursivamente) 
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                    //Pillamos el primer nodo y lo hacemos padre, luego, simplemente cogemos los nodos drink: "//drinks//drink" pasado por parametro
+                    //y lo añadimos al nodo drinks (buscamos recursivamente)
+                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-                //Crear un documento XML
-                Document xmlOut = dBuilder.newDocument();
+                    //Crear un documento XML
+                    Document xmlOut = dBuilder.newDocument();
                 
-                //Cogemos todos los nodos del primer elemento
-                Node nodoAux = xmlOut.importNode(xmlUnir.get(0).getFirstChild(), true);
-                xmlOut.appendChild(nodoAux);
+                    //Cogemos todos los nodos del primer elemento
+                    Node nodoAux = xmlOut.importNode(xmlUnir.get(0).getFirstChild(), true);
+                    xmlOut.appendChild(nodoAux);
                 
-                //Buscamos el nodo padre del hijo que troceamos
-                String [] NodoBuscar = Expresion.split("//");
-                String NombreBuscar = NodoBuscar[1];
-                Node Padre = buscarNodoBody(nodoAux,NombreBuscar);
+                    //Buscamos el nodo padre del hijo que troceamos
+                    String [] NodoBuscar = Expresion.split("//");
+                    String NombreBuscar = NodoBuscar[1];
+                    Node Padre = buscarNodoBody(nodoAux,NombreBuscar);
                 
-                //Buscamos el nodo size para borrarlo
-                String SizeBuscar = "size";
-                Node size = buscarNodoBody(nodoAux,SizeBuscar);
-                size.getParentNode().removeChild(size);
+                    //Buscamos el nodo size para borrarlo
+                    String SizeBuscar = "size";
+                    Node size = buscarNodoBody(nodoAux,SizeBuscar);
+                    size.getParentNode().removeChild(size);
                 
-                xmlEntrada.remove(xmlUnir.get(0));
+                    xmlEntrada.remove(xmlUnir.get(0));
                 
                 
 
-                //Pillamos todos los Nodos
-                for (int i = 1; i < contadorXMLs; i++) {
-                    //Pillamos la orden
-                    XPathExpression expression = xPath.compile(Expresion);
-                    Node nodoAux2 = (Node) expression.evaluate(xmlUnir.get(i), XPathConstants.NODE);
-                    Node Hijo = xmlOut.importNode(nodoAux2, true);
-                    Padre.appendChild(Hijo);
+                    //Pillamos todos los Nodos
+                    for (int i = 1; i < contadorXMLs; i++) {
+                        //Pillamos la orden
+                        XPathExpression expression = xPath.compile(Expresion);
+                        Node nodoAux2 = (Node) expression.evaluate(xmlUnir.get(i), XPathConstants.NODE);
+                        Node Hijo = xmlOut.importNode(nodoAux2, true);
+                        Padre.appendChild(Hijo);
                     
-                    //Borra del entrada
-                    xmlEntrada.remove(xmlUnir.get(i));
-                }
+                        //Borra del entrada
+                        xmlEntrada.remove(xmlUnir.get(i));
+                    }
 
-                xmlSalida = xmlOut;
+                    xmlSalida = xmlOut;
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -139,9 +134,9 @@ public class Aggregator extends Tarea {
 
     private static Node buscarNodoBody(Node nodoActual, String nombre) {
         // Verificar si el nodo actual es el que estamos buscando
-        if (nodoActual != null && nodoActual.getNodeName().equalsIgnoreCase(nombre)) {
+        if (nodoActual != null && nodoActual.getNodeName().equalsIgnoreCase(nombre))
             return nodoActual;
-        }
+
 
         // Obtener la lista de hijos del nodo actual
         Node hijo = nodoActual.getFirstChild();

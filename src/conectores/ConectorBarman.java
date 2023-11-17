@@ -83,10 +83,14 @@ public class ConectorBarman extends Conector {
 
     }
     //Colocamos en el puerto el xml
-    public void escribirMensaje() {
-
+    public void leerPuerto() {
         xmlFiles.add(puerto.getPuertoE());
     }
+
+    public PuertoES getPuerto(){
+        return puerto;
+    }
+
     //Recogemos el mensaje del puerto
     public void leerMensaje() {
         puerto.setPuertoS(devolverSQL());
@@ -98,7 +102,7 @@ public class ConectorBarman extends Conector {
 
     public int getTotal() {
 
-        if (xmlSQL.size() == 0) {
+        if (xmlSQL.isEmpty()) {
             total = 0;
         }
         return total;

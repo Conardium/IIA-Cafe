@@ -9,11 +9,11 @@ import java.util.Map;
 
 public class Replicator extends Tarea {
 
-    //Archivo que se encargará de replicar
-    private Document xmlEntrada;
-    private Document xmlSalida;
+    private Document xmlEntrada, xmlSalida;
+
     //Numero de veces que replicará
     private final int numSalidas;
+
     private Slot slotE;
     private ArrayList<Slot> ListaSlotS;
 

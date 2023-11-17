@@ -9,16 +9,11 @@ import slot.Slot;
 
 public class Content_Enricher extends Tarea {
 
-    private Slot slotEBody;
-    private Slot slotEContex;
-    private Slot slotS;
+    private Slot slotEContext, slotEBody, slotS;
 
-    private Document xmlEntradaContext;
-    private Document xmlEntradaBody;
-    private Document xmlSalida;
+    private Document xmlEntradaContext, xmlEntradaBody, xmlSalida;
     
-    private final String FiltroContexto;
-    private final String FiltroBody;
+    private final String FiltroContexto, FiltroBody;
 
     public Content_Enricher(String FiltroContexo, String FiltroBody) {
         this.FiltroContexto = FiltroContexo;
@@ -112,7 +107,7 @@ public class Content_Enricher extends Tarea {
     }
 
     public void enlazarSlotEContext(Slot slot) {
-        this.slotEContex = slot;
+        this.slotEContext = slot;
     }
     public void enlazarSlotEBody(Slot slot) {
         this.slotEBody = slot;

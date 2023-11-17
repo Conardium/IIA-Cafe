@@ -3,80 +3,14 @@ import conectores.*;
 
 import java.util.Scanner;
 
+import controlador.Controlador;
 import slot.Slot;
 import tareas.*;
 
-/**
- *
- * @author Cristian
- */
+
 public class main {
 
-    //**********Datos BD*********//
-    static String sgbd = "derby", ip = "localhost", service_bd = "IIA_Cafe", usuario = "user_web", password = "web";
-
-    /**
-     * ***************Tablas BD****************
-     */
-    static String TablaInicial = "MENSAJEENTRADA", TablaFinal = "MENSAJESALIDA", TablaBebidas = "BEBIDAS";
-
-     //**********Expresiones XML - XPATH********//
-
-    static String ExpresionSplitter = "//drinks//drink"; //Padre + hijo de donde hacer Split
-    static String FiltroDistributor = "//type"; //Diferentes valores por donde se distribuye
-    static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaBebidas + "\n\tWHERE NAME = '";//En lo que se convierte el XML
-    static String FiltroTranslator = "//name";//Para buscar en la base datos
-    static String FiltroCorrelator = "//name";//Por donde hacer la correlacion
-    static String FiltroContext = "//exist";//El nodo contexto
-    static String FiltroBody = "//drink";//El nodo body al que añadirlo
-    static String ExpresionAggregator = "//drinks//drink";//Padre + hijo de donde se hace Agregacion
-    static String FiltroAgregator = "//order_id/text()"; //Para saber que trozos son iguales
-
-    //**********Iniciales*********//
-    static ConectorComandas CInicial = new ConectorComandas();
-    static ConectorBarman cBC = new ConectorBarman();
-    static ConectorBarman cBH = new ConectorBarman();
-    static ConectorCamarero cCam = new ConectorCamarero();
-
-    static Puerto P_Inicial = new Puerto();
-    static Puerto P_Final = new Puerto();
-    static Puerto P_ES_Cold = new Puerto();
-    static Puerto P_ES_Hot = new Puerto();
-
-    //************Slots**********//
-    static Slot SInicial = new Slot("Inicial");
-    static Slot S2 = new Slot("S2");
-    static Slot S3C = new Slot("3C");
-    static Slot S3H = new Slot("3H");
-    static Slot S4C = new Slot("4C");
-    static Slot S4H = new Slot("4H");
-    static Slot S5C = new Slot("5C");
-    static Slot S5H = new Slot("5H");
-    static Slot S6C = new Slot("6C");
-    static Slot S6H = new Slot("6H");
-    static Slot S7C = new Slot("7C");
-    static Slot S7H = new Slot("7H");
-    static Slot S8C = new Slot("8C");
-    static Slot S8H = new Slot("8H");
-    static Slot S9C = new Slot("9C");
-    static Slot S9H = new Slot("9H");
-    static Slot S10C = new Slot("10C");
-    static Slot S10H = new Slot("10H");
-    static Slot S11 = new Slot("11");
-    static Slot SFinal = new Slot("Final");
-
-    //************Tareas**************//
-    static Splitter TSplitter = new Splitter(ExpresionSplitter);
-    static Distributor TDistributor = new Distributor(FiltroDistributor);
-    static Replicator TReplicator = new Replicator(2);
-    static Translator TTranslatorC = new Translator(FiltroTranslator,ExpresionTranslator);
-    static Translator TTranslatorH = new Translator(FiltroTranslator,ExpresionTranslator);
-    static Correlator TCorrelatorC = new Correlator(FiltroCorrelator);
-    static Correlator TCorrelatorH = new Correlator(FiltroCorrelator);
-    static Content_Enricher TCEnricherC = new Content_Enricher(FiltroContext,FiltroBody);
-    static Content_Enricher TCEnricherH = new Content_Enricher(FiltroContext,FiltroBody);
-    static Merger TMerger = new Merger();
-    static Aggregator TAggregator = new Aggregator(ExpresionAggregator,FiltroAgregator);
+    static Controlador CAFE;
 
     //main//
     public static void main(String[] args) {
