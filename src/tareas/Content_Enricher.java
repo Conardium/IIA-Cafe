@@ -12,7 +12,7 @@ public class Content_Enricher extends Tarea {
     private Slot slotEContext, slotEBody, slotS;
 
     private Document xmlEntradaContext, xmlEntradaBody, xmlSalida;
-    
+
     private final String FiltroContexto, FiltroBody;
 
     public Content_Enricher(String FiltroContexo, String FiltroBody) {
@@ -20,7 +20,6 @@ public class Content_Enricher extends Tarea {
         this.FiltroBody = FiltroBody;
         this.slotS = new Slot("Content_EnricherSalida");
     }
-    
 
     @Override
     public void realizarTarea() {
@@ -36,7 +35,7 @@ public class Content_Enricher extends Tarea {
 
                     // Evaluar la expresión XPath para obtener el nodo del contexto
                     XPathExpression expr = xPath.compile(FiltroContexto);
-                    Node nodoAnadir = (Node) expr.evaluate(xmlEntradaContext, XPathConstants.NODE);
+                    NodeList nodosAnadir = (NodeList) expr.evaluate(xmlEntradaContext, XPathConstants.NODESET);
 
                     //Creamos nuevo documento XML
                     Document xmlOut = dBuilder.newDocument();
@@ -49,11 +48,12 @@ public class Content_Enricher extends Tarea {
 
                     // Busqueda del nodo del que será hijo
                     Node nodoPadreBuscado = buscarNodoBody(nodoAux, nombreNodo[1]);
-                    // Importamos el nodo del contexto
-                    Node nodoHijoBuscado = xmlOut.importNode(nodoAnadir, true);
-                    // Lo hacemos hijo
-                    nodoPadreBuscado.appendChild(nodoHijoBuscado);
-
+                    // Importamos los nodos del contexto
+                    for (int i = 0; i < nodosAnadir.getLength(); i++) {
+                        Node nodoHijoBuscado = xmlOut.importNode(nodosAnadir.item(i), true);
+                        // Lo hacemos hijo
+                        nodoPadreBuscado.appendChild(nodoHijoBuscado);
+                    }
                     //Lo colocamos en la salida
                     xmlSalida = xmlOut;
 
@@ -94,6 +94,7 @@ public class Content_Enricher extends Tarea {
         xmlEntradaBody = slotEBody.getMensaje();
         xmlEntradaContext = slotEContext.getMensaje();
     }
+
     @Override
     public void setMSJslot() {
 
@@ -108,6 +109,7 @@ public class Content_Enricher extends Tarea {
     public void enlazarSlotEContext(Slot slot) {
         this.slotEContext = slot;
     }
+
     public void enlazarSlotEBody(Slot slot) {
         this.slotEBody = slot;
     }

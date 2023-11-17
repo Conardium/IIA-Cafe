@@ -116,7 +116,7 @@ public class ConectorMensajes extends Conector {
 
             return true;
         } catch (Exception ex) {
-            System.out.println("Error en Conector Camarero - No se han podido borrar las tablas de la BD");
+            System.out.println("Error en Conector Mensajes - No se han podido borrar las tablas de la BD");
             return false;
         }
     }

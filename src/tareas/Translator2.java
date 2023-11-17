@@ -53,6 +53,10 @@ public class Translator2 extends Tarea {
                     Node nodoEncontrado = buscarNodoBody(xmlOut.getFirstChild(),Filtro);
 
                     nodoEncontrado.getParentNode().removeChild(nodoEncontrado);
+                    
+                    Node nodoEncontrado2 = buscarNodoBody(xmlOut.getFirstChild(),"size");
+
+                    nodoEncontrado2.getParentNode().removeChild(nodoEncontrado2);
 
                     //Guardo en xmlSalida
                     xmlSalida = xmlOut;

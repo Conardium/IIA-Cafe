@@ -36,7 +36,7 @@ public class ConectorAlumnos extends Conector {
             dniAlumno = dniAlumno.substring(0, dniAlumno.length() - 1);
 
             String consulta = "SELECT DNI,EMAIL,TELEFONO FROM " + Table
-                    + " WHERE NAME = " + dniAlumno;
+                    + " WHERE DNI = " + dniAlumno;
             PreparedStatement ps = getConexion().prepareStatement(consulta);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

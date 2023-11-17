@@ -30,7 +30,7 @@ public class Replicator extends Tarea {
     public void realizarTarea() {
 
         if(slotE != null) {
-            System.out.println("Entro");
+            //System.out.println("Entro");
             for (int nXML = 0; nXML < slotE.devolverNConjuntos(); nXML++) {
 
                 getMSJslot();

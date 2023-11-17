@@ -11,7 +11,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
-public class Filtro extends Tarea{
+public class Filtro extends Tarea {
+
     private Document xmlEntrada, xmlSalida;
 
     private final String Filtro;
@@ -19,8 +20,7 @@ public class Filtro extends Tarea{
     private Slot slotE;
     private final Slot slotS;
 
-    public Filtro(String Filtro)
-    {
+    public Filtro(String Filtro) {
         this.Filtro = Filtro;
         this.slotS = new Slot("FiltroSalida");
     }
@@ -28,11 +28,14 @@ public class Filtro extends Tarea{
     @Override
     public void realizarTarea() {
 
-        if(slotE != null){
+        boolean encontrado = false;
+
+        if (slotE != null) {
             for (int nXML = 0; nXML < slotE.devolverNConjuntos(); nXML++) {
                 getMSJslot();
-
-                try{
+                xmlSalida = null;
+                encontrado = false;
+                try {
 
                     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -41,29 +44,35 @@ public class Filtro extends Tarea{
 
                     //Pillamos el nombre
                     XPathExpression expressionXpath2 = xPath.compile(Filtro);
+
                     Node nodoSMS = (Node) expressionXpath2.evaluate(xmlEntrada, XPathConstants.NODE);
 
-                    if(!nodoSMS.getTextContent().equals("NULL"))
-                    {
-                        //Crear un documento XML
-                        Document xmlOut = dBuilder.newDocument();
+                    System.out.println(nodoSMS.getFirstChild().getTextContent());
+                    if (!nodoSMS.getTextContent().equalsIgnoreCase("NULL")) {
+
+                        encontrado = true;
+                        System.out.println("Entro");
 
                         //Guardo en xmlSalida
-                        xmlSalida = xmlOut;
+                        xmlSalida = xmlEntrada;
                     }
-                }catch (Exception e){
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                setMSJslot();
+                if (encontrado) {
+                    setMSJslot();
+                }
             }
         }
     }
+
     @Override
     protected void getMSJslot() {
 
         xmlEntrada = slotE.getMensaje();
     }
+
     @Override
     protected void setMSJslot() {
 

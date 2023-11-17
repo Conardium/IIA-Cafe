@@ -17,10 +17,10 @@ public class ControladorProblema1 {
     //**********Expresiones XML - XPATH********//
 
     static String ExpresionSplitter = "//alumnos//alumno"; //Padre + hijo de donde hacer Split
-    static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaAlumnos + "\n\tWHERE NAME = '";//En lo que se convierte el XML
+    static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaAlumnos + "\n\tWHERE DNI = '";//En lo que se convierte el XML
     static String FiltroTranslator = "//dni";//Para buscar en la base datos
     static String FiltroTraslatorSMS = "EMAIL";
-    static String FiltroTraslatorEMAIL = "SMS";
+    static String FiltroTraslatorEMAIL = "TELEFONO";
     static String FiltroCorrelator = "//dni";//Por donde hacer la correlacion
     static String FiltroContext = "//email | //telefono";//El nodo contexto
     static String FiltroBody = "//alumno";//El nodo body al que añadirlo
@@ -51,8 +51,8 @@ public class ControladorProblema1 {
         TReplicator1.enlazarSlotE(TSplitter.enlazarSlotS());
         TTranslatorBD.enlazarSlotE(TReplicator1.enlazarSlotS(1));
         cAlum.getPuerto().enlazarSlotE(TTranslatorBD.enlazarSlotS());
-        TCorrelator.enlazarSlotE(TReplicator1.enlazarSlotS(1),1);
-        TCorrelator.enlazarSlotE(cAlum.getPuerto().enlazarSlotS(),2);
+        TCorrelator.enlazarSlotE(cAlum.getPuerto().enlazarSlotS(),1);
+        TCorrelator.enlazarSlotE(TReplicator1.enlazarSlotS(2),2);
         TCEnricher.enlazarSlotEContext(TCorrelator.enlazarSlotS(1));
         TCEnricher.enlazarSlotEBody(TCorrelator.enlazarSlotS(2));
         TReplicator2.enlazarSlotE(TCEnricher.enlazarSlotS());
