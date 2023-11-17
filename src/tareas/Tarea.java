@@ -11,12 +11,10 @@ public abstract class Tarea {
 
     public void realizarTarea(){};
 
-    public void getMSJslot(){};
+    protected void getMSJslot(){};
 
-    public void setMSJslot(){};
+    protected void setMSJslot(){};
     
-    public int calcularSalidas(){return 0;};
-
     //Asociamos el puerto de entrada
     public void enlazarSlotE(Slot slot){};
 

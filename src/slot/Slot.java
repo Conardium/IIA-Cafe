@@ -49,7 +49,7 @@ public class Slot {
         return nEllamada;
     }
 
-    public void mostrarNodos(NodeList nHijos, int paso) {
+    private void mostrarNodos(NodeList nHijos, int paso) {
 
         String tabulaciones = "\t";
 

@@ -11,6 +11,7 @@ public abstract class Conector {
 
     private Connection conn = null;
     private String URL = "";
+    protected ArrayList<Document> xmlFiles = new ArrayList();
 
     public void Conexion(String sgbd, String ip, String service_bd, String usuario,
             String password) throws SQLException {
@@ -29,7 +30,12 @@ public abstract class Conector {
 
         conn = DriverManager.getConnection(URL, usuario, password);
     }
-
+    
+    //escribir en el puerto
+    public void escribirPuerto() {}
+    //leer del puerto
+    public void leerPuerto() {}
+    
     Connection getConexion() {
 
         return conn;
@@ -39,6 +45,6 @@ public abstract class Conector {
         conn.close();
     }
 
-    ArrayList<Document> xmlFiles = new ArrayList();
+    
 
 }

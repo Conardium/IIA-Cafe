@@ -66,8 +66,8 @@ public class ConectorComandas extends Conector {
         return puerto;
     }
 
-    //Colocamos en el puerto el xml
-    public void escribirMensaje() {
+    @Override
+    public void escribirPuerto() {
 
         puerto.setPuerto(xmlFiles.remove(0));
     }

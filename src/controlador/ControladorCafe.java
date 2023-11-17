@@ -1,14 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controlador;
 
 import conectores.ConectorBarman;
 import conectores.ConectorCamarero;
 import conectores.ConectorComandas;
-import puertos.PuertoEoS;
-import slot.Slot;
 import tareas.*;
 import java.util.Scanner;
 
@@ -16,7 +10,7 @@ import java.util.Scanner;
  *
  * @author Cristian
  */
-public class Controlador {
+public class ControladorCafe {
 
     //**********Datos BD*********//
     static String sgbd = "derby", ip = "localhost", service_bd = "IIA_Cafe", usuario = "user_web", password = "web";
@@ -47,7 +41,7 @@ public class Controlador {
 
     //************Tareas**************//
     static Splitter TSplitter = new Splitter(ExpresionSplitter);
-    static Distributor TDistributor = new Distributor(FiltroDistributor);
+    static Distributor TDistributor = new Distributor(FiltroDistributor,2);
     static Replicator TReplicatorC = new Replicator(2);
     static Replicator TReplicatorH = new Replicator(2);
     static Translator TTranslatorC = new Translator(FiltroTranslator,ExpresionTranslator);
@@ -60,7 +54,7 @@ public class Controlador {
     static Aggregator TAggregator = new Aggregator(ExpresionAggregator,FiltroAgregator);
 
     //Constructor//
-    public Controlador() {
+    public ControladorCafe() {
 
         //Enlazamos los slots;
         TSplitter.enlazarSlotE(CInicial.getPuerto().enlazarSlotS());
@@ -89,7 +83,7 @@ public class Controlador {
             for (int i = 1; i <= CInicial.numMensajes(); i++) {
 
                 //=====> Escribimos los Mensajes en el puerto Inicial del 1 al 9
-                CInicial.escribirMensaje();
+                CInicial.escribirPuerto();
 
                 //***************************************************//
                 //********************SPLITTER***********************//
@@ -131,8 +125,6 @@ public class Controlador {
                     cBC.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
                     cBC.escribirPuerto();
                 }
-                //========> Puerto lee mensajes hot, el conector los lee y los transforma
-                cBH.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
 
                 //========> Conector escribe mensajes hot, el puerto los pasa al slot
                 while (cBH.getPuerto().nMensajes() != 0) {
@@ -172,7 +164,7 @@ public class Controlador {
                 TAggregator.realizarTarea();
 
                 //=====> El conector Camarero recoge los datos del puerto Final
-                cCam.escribirMensaje();
+                cCam.leerPuerto();
                 // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
                 cCam.anadirMensajeBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
 

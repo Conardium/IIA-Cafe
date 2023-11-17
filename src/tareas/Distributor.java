@@ -19,11 +19,19 @@ public class Distributor extends Tarea {
     private Map<String, Slot> mapaSalida;
 
     private final String Filtro;
+    private ArrayList<Slot> slotS;
+    private final int nSalidas;
 
-    public Distributor(String Filtro) {
+    public Distributor(String Filtro, int nSalidas) {
 
         this.Filtro = Filtro;
-        mapaSalida = new HashMap<>();
+        this.nSalidas = nSalidas;
+        this.mapaSalida = new HashMap<>();
+        this.slotS = new ArrayList();
+        
+        for (int i = 0; i < nSalidas; i++) {
+            slotS.add(new Slot("DistributorSalida_" + i));
+        }
     }
 
     @Override
@@ -41,17 +49,16 @@ public class Distributor extends Tarea {
 
                     String Filtro = NodoPadre.getTextContent();
                     // Obtener la lista correspondiente al filtro
-                    Slot slotS = mapaSalida.computeIfAbsent(Filtro, k -> new Slot("DistributorSalida_" + Filtro));
+                    Slot slotFicheros = mapaSalida.computeIfAbsent(Filtro, k -> new Slot("DistributorSalida_" + Filtro));
 
-                    xmlSalida = xmlEntrada;
-
-                    setMSJslot(slotS);
+                    slotFicheros.setMensaje(xmlEntrada);
 
                 } catch (XPathExpressionException ex) {
                     ex.printStackTrace();
                 }
+ 
             }
-
+            setMSJslot();
         }
 
     }
@@ -61,8 +68,15 @@ public class Distributor extends Tarea {
 
     }
 
-    public void setMSJslot(Slot slotS) {
-        slotS.setMensaje(xmlSalida);
+    public void setMSJslot() {
+        int contador = 0;
+        for (Slot sAux : mapaSalida.values()) {
+            int i = 0;
+            while(i < sAux.devolverNConjuntos()) {
+                slotS.get(contador).setMensaje(sAux.getMensaje());
+            }
+           contador++;
+        }
     }
 
     @Override
@@ -71,14 +85,7 @@ public class Distributor extends Tarea {
     }
 
     public Slot enlazarSlotS(int n) {
-        int contador = 1;
-        for (Slot slotS : mapaSalida.values()) {
-            if(contador == n){
-                return slotS;
-            }
-            contador++;
-        }
-        return null;
+        return slotS.get(n - 1);
     }
 
 }

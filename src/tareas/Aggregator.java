@@ -46,11 +46,12 @@ public class Aggregator extends Tarea {
                 XPath xPath = XPathFactory.newInstance().newXPath();
 
                 //Intentamos recoger todos los XML que sean del mismo id hasta su tamaño
+                contador = 0;
+                
                 while (contador < xmlEntrada.size() && !encontrado) {
                     try {
                         //Mientras el contador sea menor a todos los que hay
                         xmlUnir = new ArrayList<>();//Reinicio la lista
-                        contador = 0;
                         contadorXMLs = 1;
 
                         //Meto el primero en la lista y pillo su id y el numero de trozos
@@ -59,19 +60,22 @@ public class Aggregator extends Tarea {
                         // Evaluar la expresión XPath para obtener el id (o algo que lo identifique)
                         XPathExpression expr = xPath.compile(Filtro);
                         double id = (double) expr.evaluate(xmlEntrada.get(contador), XPathConstants.NUMBER);
+
                         // Evaluar la expresión XPath para obtener el numero de elementos
-                        expr = xPath.compile("//size/text()");
-                        double size = (double) expr.evaluate(xmlEntrada.get(contador), XPathConstants.NUMBER);
+                        XPathExpression expr2 = xPath.compile("//size/text()");
+                        double size = (double) expr2.evaluate(xmlEntrada.get(contador), XPathConstants.NUMBER);
 
                         //Para la cabecera
-                        id_Unir = String.valueOf(id);
-
+                        id_Unir = String.valueOf(id);    
                         //A partir del siguiente empezamos a buscar
                         int j = contador + 1;
+
                         //Si el contadorXML es igual al numero pues salimos, o si nos quedamos sin entrada
                         while (j < xmlEntrada.size() && contadorXMLs < size) {
                             //Si es del mismo id lo agregamos
-                            if (Integer.parseInt(xmlEntrada.get(j).getFirstChild().getFirstChild().getTextContent()) == id) {
+                            double idAux = (double) expr.evaluate(xmlEntrada.get(j), XPathConstants.NUMBER);
+                            
+                            if (idAux == id) {
                                 xmlUnir.add(xmlEntrada.get(j));
                                 contadorXMLs++;
                             }
@@ -87,7 +91,7 @@ public class Aggregator extends Tarea {
                     } catch (XPathExpressionException ex) {
                     }
                 }
-                if (encontrado) {
+                if (encontrado) {//No lo encuentra?
                     try {
 
                     //Pillamos el primer nodo y lo hacemos padre, luego, simplemente cogemos los nodos drink: "//drinks//drink" pasado por parametro
@@ -127,12 +131,12 @@ public class Aggregator extends Tarea {
                         //Borra del entrada
                         xmlEntrada.remove(xmlUnir.get(i));
                     }
-
                     xmlSalida = xmlOut;
 
                     } catch (Exception e) {
                      e.printStackTrace();
                     }
+                    
                 }
 
                 setMSJslot();
@@ -162,14 +166,13 @@ public class Aggregator extends Tarea {
     }
     @Override
     public void getMSJslot() {
-
-        for (int i = 0; i < slotE.devolverNConjuntos(); i++) {
+        
+        for (int i = 0; i < slotE.devolverNConjuntos() + 2; i++) {
             xmlEntrada.add(slotE.getMensaje());
         }
     }
     @Override
     public void setMSJslot() {
-
         slotS.setMensaje(xmlSalida);
     }
 

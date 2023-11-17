@@ -22,7 +22,6 @@ public class Merger extends Tarea {
         this.contador = 0;
     }
 
-    //FALTA
     @Override
     public void realizarTarea() {
 
@@ -39,22 +38,19 @@ public class Merger extends Tarea {
 
     }
     @Override
-    public void getMSJslot() {
-        for (Slot slotS : mapaSlotsE.values()) {
-            if(slotS.devolverNConjuntos() != 0){
+    protected void getMSJslot() {
+        boolean encontrado = false;
+        for (Slot slotS : mapaSlotsE.values() ) {
+            if(slotS.devolverNConjuntos() != 0 && !encontrado){
                 xmlEntrada = slotS.getMensaje();
+                encontrado = true;
             }
         }
     }
 
     @Override
-    public void setMSJslot() {
-        slotS.setMensaje(xmlSalida.get(0));
-    }
-
-    @Override
-    public int calcularSalidas() {
-        return 0;
+    protected void setMSJslot() {
+        slotS.setMensaje(xmlSalida.remove(0));
     }
 
     @Override

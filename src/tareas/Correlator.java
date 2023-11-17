@@ -17,7 +17,6 @@ import slot.Slot;
  */
 public class Correlator extends Tarea {
 
-    //Mapa para añadir los tipos de datos de entrada.
     private ArrayList<Document> xmlBodyE = new ArrayList<>();
     private ArrayList<Document> xmlContextE = new ArrayList<>();
 
@@ -35,6 +34,10 @@ public class Correlator extends Tarea {
         this.Filtro = Filtro;
         this.slotSBody = new Slot("SlotCorrelatorSalidaBody");
         this.slotSContext = new Slot("SlotCorrelatorSalidaContext");
+        this.xmlBodyE = new ArrayList();
+        this.xmlContextE = new ArrayList();
+        this.xmlBodyS = new ArrayList();
+        this.xmlContextS = new ArrayList();
     }
 
     @Override
@@ -44,7 +47,7 @@ public class Correlator extends Tarea {
         //ya que el correlator puede tener muchas entradas y muchas salidas.
         //pero nosotros asumimos que tiene 2 entradas y 2 salidas, por que
         //en clase no hemos visto otro tipo.
-        if(slotEContext != null && slotEBody != null) {
+        if (slotEContext != null && slotEBody != null) {
             for (int nXML = 0; nXML < slotEContext.devolverNConjuntos(); nXML++) {
                 getMSJslot();
                 try {
@@ -70,7 +73,6 @@ public class Correlator extends Tarea {
                         }
                         //Colocamos en su respectiva posición cada xml
                         if (Context == i) {
-
                             xmlContextS.add(xmlContextE.get(Context));
                             xmlBodyS.add(xmlBodyE.get(Body));
                             nEllamada = xmlContextS.size();
@@ -86,29 +88,36 @@ public class Correlator extends Tarea {
         }
 
     }
+
     @Override
-    public void getMSJslot(){
+    public void getMSJslot() {
         xmlBodyE.add(slotEBody.getMensaje());
         xmlContextE.add(slotEContext.getMensaje());
     }
+
     @Override
-    public void setMSJslot(){
-        xmlBodyS.add(slotSBody.getMensaje());
-        xmlContextS.add(slotSContext.getMensaje());
+    public void setMSJslot() {
+        
+        xmlContextE.remove(xmlContextS.get(0));
+        xmlBodyE.remove(xmlBodyS.get(0));
+        
+        slotSBody.setMensaje(xmlBodyS.remove(0));
+        slotSContext.setMensaje(xmlContextS.remove(0));;
     }
 
-
     public void enlazarSlotE(Slot slot, int i) {
-        if(i == 1)
+        if (i == 1) {
             this.slotEContext = slot;
-        else
+        } else {
             this.slotEBody = slot;
+        }
     }
 
     public Slot enlazarSlotS(int i) {
-        if(i == 1)
+        if (i == 1) {
             return slotSContext;
-        else
+        } else {
             return slotSBody;
+        }
     }
 }

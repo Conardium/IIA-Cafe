@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import puertos.PuertoES;
-import puertos.PuertoEoS;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,27 +17,26 @@ public class ConectorBarman extends Conector {
     private PuertoES puerto = new PuertoES();
 
     public void busquedaBD(String Table, String sgbd, String ip, String service_bd, String usuario,
-                           String password) {
+            String password) {
 
         try {
             //Nos conectamos
-            Conexion( sgbd, ip,  service_bd,  usuario, password);
+            Conexion(sgbd, ip, service_bd, usuario, password);
 
             Document xmlAux = xmlFiles.remove(0);
             String bebidaNombre = "";
             int existe = 0;
 
             bebidaNombre = xmlAux.getFirstChild().getTextContent();
-            
+
             String[] partes = bebidaNombre.split("=");
 
             bebidaNombre = partes[1].trim();
 
             bebidaNombre = bebidaNombre.substring(0, bebidaNombre.length() - 1);
-            
 
-            String consulta = "SELECT NAME,EXIST FROM " + Table +
-                    " WHERE NAME = " + bebidaNombre ;
+            String consulta = "SELECT NAME,EXIST FROM " + Table
+                    + " WHERE NAME = " + bebidaNombre;
             PreparedStatement ps = getConexion().prepareStatement(consulta);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -49,13 +47,13 @@ public class ConectorBarman extends Conector {
             desconexion();
 
             /**
-             * *********LO QUE DEVOLVERÁ LA BD**********
+             * *********LO QUE DEVOLVERÁ LA BD
+             **********
              * <result>
              * <name>Nombre bebida</name>
              * <exist>0 o 1</exist>
              * </result>
              */
-
             ///Crear un documento XML
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -84,15 +82,16 @@ public class ConectorBarman extends Conector {
 
     }
     //Colocamos en el puerto el xml
+
+    public PuertoES getPuerto() {
+        return puerto;
+    }
+    
+    @Override
     public void leerPuerto() {
         xmlFiles.add(puerto.getPuertoE());
     }
-
-    public PuertoES getPuerto(){
-        return puerto;
-    }
-
-    //Recogemos el mensaje del puerto
+    @Override
     public void escribirPuerto() {
         puerto.setPuertoS(devolverSQL());
     }

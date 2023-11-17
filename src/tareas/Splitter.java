@@ -103,14 +103,16 @@ public class Splitter extends Tarea {
         }
     }
     @Override
-    public void getMSJslot() {
+    protected void getMSJslot() {
 
         xmlEntrada = slotE.getMensaje();
     }
     @Override
-    public void setMSJslot() {
-        for (int i = 0; i < nEllamada; i++) {
-            slotS.setMensaje(xmlSalida.remove(i));
+    protected void setMSJslot() {
+        int i = 0;
+        while(i < nEllamada) {
+            slotS.setMensaje(xmlSalida.remove(0));
+            i++;
         }
     }
 
@@ -118,10 +120,6 @@ public class Splitter extends Tarea {
         return nEllamada;
     }
 
-    @Override
-    public int calcularSalidas() {
-        return 0;
-    }
 
     @Override
     public void enlazarSlotE(Slot slot) {

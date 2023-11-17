@@ -30,7 +30,7 @@ public class Replicator extends Tarea {
     public void realizarTarea() {
 
         if(slotE != null) {
-
+            System.out.println("Entro");
             for (int nXML = 0; nXML < slotE.devolverNConjuntos(); nXML++) {
 
                 getMSJslot();
@@ -42,21 +42,17 @@ public class Replicator extends Tarea {
 
     }
     @Override
-    public void getMSJslot() {
+    protected void getMSJslot() {
 
         xmlEntrada = slotE.getMensaje();
     }
     @Override
-    public void setMSJslot() {
+    protected void setMSJslot() {
         for (int i = 0; i < numSalidas; i++) {
             ListaSlotS.get(i).setMensaje(xmlSalida);
         }
     }
 
-    @Override
-    public int calcularSalidas() {
-        return 0;
-    }
 
     @Override
     public void enlazarSlotE(Slot slot) {

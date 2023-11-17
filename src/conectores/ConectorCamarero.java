@@ -9,8 +9,8 @@ import puertos.PuertoEoS;
 
 public class ConectorCamarero extends Conector {
 
-    int id = 0;
-    PuertoEoS puerto = new PuertoEoS(1);
+    private int id = 0;
+    private PuertoEoS puerto = new PuertoEoS(1);
 
     public String convertirXMLtoString() {
 
@@ -73,8 +73,8 @@ public class ConectorCamarero extends Conector {
         return puerto;
     }
 
-    //Recogemos el mensaje del puerto
-    public void escribirMensaje() {
+    @Override
+    public void leerPuerto() {
 
         xmlFiles.add(puerto.getPuerto());
     }

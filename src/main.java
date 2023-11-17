@@ -1,21 +1,18 @@
 
-import conectores.*;
 
-import java.util.Scanner;
-
-import controlador.Controlador;
-import slot.Slot;
-import tareas.*;
+import controlador.*;
 
 
 public class main {
 
-    static Controlador CAFE;
+    static ControladorCafe CAFE;
+    static ControladorProblema1 Problema_1;
 
     //main//
     public static void main(String[] args) {
 
-        CAFE = new Controlador();
+        CAFE = new ControladorCafe();
+        Problema_1 = new ControladorProblema1();
 
     }
 
