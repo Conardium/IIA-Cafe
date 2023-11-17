@@ -1,13 +1,13 @@
 package conectores;
 
-import java.sql.PreparedStatement;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import puertos.PuertoEoS;
 
-public class ConectorCamarero extends Conector {
+import java.sql.PreparedStatement;
+
+public class ConectorMensajes extends Conector {
 
     private int id = 0;
     private final PuertoEoS puerto = new PuertoEoS(1);
@@ -49,7 +49,7 @@ public class ConectorCamarero extends Conector {
                 mensaje.append(" ").append(nAux.getTextContent());
             }
             if (!esTexto) {
-                if (nAux.getChildNodes() != null) {//Si tiene hijos los mostramos 
+                if (nAux.getChildNodes() != null) {//Si tiene hijos los mostramos
                     mostrarNodos(nAux.getChildNodes(), mensaje, paso + 1);
                 }
                 if (nAux.getChildNodes().getLength() > 1) {
@@ -74,7 +74,7 @@ public class ConectorCamarero extends Conector {
     }
 
     public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-            String password) {
+                            String password) {
         try {
             Conexion(sgbd, ip, service_bd, usuario, password);
 
@@ -105,7 +105,7 @@ public class ConectorCamarero extends Conector {
 
     //Usamos este metodo solo para las pruebas
     public boolean borrarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-            String password) {
+                            String password) {
         try {
             Conexion(sgbd, ip, service_bd, usuario, password);
 
@@ -120,5 +120,4 @@ public class ConectorCamarero extends Conector {
             return false;
         }
     }
-
 }

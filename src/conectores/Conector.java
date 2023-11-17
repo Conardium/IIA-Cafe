@@ -1,6 +1,8 @@
 package conectores;
 
 import org.w3c.dom.Document;
+import puertos.PuertoEoS;
+import puertos.PuertoES;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,7 +37,7 @@ public abstract class Conector {
     public void escribirPuerto() {}
     //leer del puerto
     public void leerPuerto() {}
-    
+
     Connection getConexion() {
 
         return conn;
