@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import puertos.PuertoES;
+import puertos.PuertoEoS;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
