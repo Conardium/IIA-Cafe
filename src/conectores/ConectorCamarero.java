@@ -10,7 +10,7 @@ import puertos.PuertoEoS;
 public class ConectorCamarero extends Conector {
 
     private int id = 0;
-    private PuertoEoS puerto = new PuertoEoS(1);
+    private final PuertoEoS puerto = new PuertoEoS(1);
 
     public String convertirXMLtoString() {
 

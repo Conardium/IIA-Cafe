@@ -81,7 +81,6 @@ public class ConectorBarman extends Conector {
         }
 
     }
-    //Colocamos en el puerto el xml
 
     public PuertoES getPuerto() {
         return puerto;
