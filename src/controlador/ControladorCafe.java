@@ -6,10 +6,7 @@ import conectores.ConectorComandas;
 import tareas.*;
 import java.util.Scanner;
 
-/**
- *
- * @author Cristian
- */
+
 public class ControladorCafe {
 
     //**********Datos BD*********//
@@ -18,7 +15,7 @@ public class ControladorCafe {
     /**
      * ***************Tablas BD****************
      */
-    static String TablaInicial = "MENSAJEENTRADA", TablaFinal = "MENSAJESALIDA", TablaBebidas = "BEBIDAS";
+    static String TablaBebidas = "BEBIDAS";
 
     //**********Expresiones XML - XPATH********//
 
@@ -79,9 +76,9 @@ public class ControladorCafe {
         cCam.getPuerto().enlazarSlotE(TAggregator.enlazarSlotS());
 
         //Cargamos Datos
-        if (CInicial.CargarBD(TablaInicial, sgbd, ip, service_bd, usuario, password)) {
+        if (CInicial.CargarFicheros() == true){
             for (int i = 1; i <= CInicial.numMensajes(); i++) {
-
+                
                 //=====> Escribimos los Mensajes en el puerto Inicial del 1 al 9
                 CInicial.escribirPuerto();
 
@@ -153,22 +150,20 @@ public class ControladorCafe {
                 //***************************************************//
                 TAggregator.realizarTarea();
 
-                //=====> El conector Camarero recoge los datos del puerto Final
-                cCam.leerPuerto();
-                // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
-                cCam.anadirMensajeBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
+                // El leer mensaje, escribirá el mensaje en la carpeta
+                cCam.escribirFicheros();
 
                 System.out.println("Presiona Enter para continuar...");
                 Scanner scanner = new Scanner(System.in);
                 scanner.nextLine();
             }
 
-            //Borramos la BD
-            System.out.println("Vamos a Borrar los mensajes finales de la BD");
+            //Borramos la carpeta
+            System.out.println("Vamos a Borrar los mensajes finales de la carpeta");
             System.out.println("Presiona Enter para continuar...");
             Scanner scanner = new Scanner(System.in);
             scanner.nextLine();
-            cCam.borrarBD(TablaFinal, sgbd, ip, service_bd, usuario, password);
+            cCam.borrarFicheros();
         }
     }
 

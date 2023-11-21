@@ -1,16 +1,24 @@
 package conectores;
 
-import org.w3c.dom.Document;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import puertos.PuertoEoS;
-
-import java.sql.PreparedStatement;
 
 public class ConectorMensajes extends Conector {
 
     private int id = 0;
     private final PuertoEoS puerto = new PuertoEoS(1);
+    private final String directorioActual = System.getProperty("user.dir") + "\\src\\notas_output";
+    private String nombre;
+
+    public ConectorMensajes(String nombre) {
+        this.nombre = nombre;
+    }
 
     public String convertirXMLtoString() {
 
@@ -22,6 +30,12 @@ public class ConectorMensajes extends Conector {
         String mensajeFinal = "<" + nPadre.getNodeName() + ">"
                 + mensaje.toString()
                 + "\n</" + nPadre.getNodeName() + ">";
+
+        System.out.println("\n*******************PUERTO SALIDA***********************");
+        System.out.println("El Mensaje llega al Puerto Final");
+        System.out.println(mensajeFinal);
+        System.out.println("\n********************-----------*************************");
+
         return mensajeFinal;
     }
 
@@ -73,58 +87,53 @@ public class ConectorMensajes extends Conector {
         xmlFiles.add(puerto.getPuerto());
     }
 
-    public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-            String password) {
-
+    public boolean escribirFicheros() {
+        //No esta escribiendo todos
         try {
-            Conexion(sgbd, ip, service_bd, usuario, password);
+            while (puerto.enlazarSlotS().devolverNConjuntos() != 0) {
+                System.out.println(puerto.enlazarSlotS().devolverNConjuntos());
+                leerPuerto();
+                this.id++;
 
-            String Mensaje = convertirXMLtoString();
+                String nombreArchivo = nombre + this.id + "_output.xml";
 
-            PreparedStatement ps = getConexion().prepareStatement("INSERT INTO " + NombreTabla + " VALUES "
-                    + "(?,?)");
-            ps.setInt(1, id);
-            ps.setString(2, Mensaje);
-            ps.executeUpdate();
+                // Crea un nuevo objeto File con la ruta completa
+                File nuevoArchivo = new File(directorioActual, nombreArchivo);
 
-            desconexion();
-            
-            id++;
+                String mensaje = convertirXMLtoString();
 
+                try ( BufferedWriter writer = new BufferedWriter(new FileWriter(nuevoArchivo))) {
+                    writer.write(mensaje);
+                } catch (IOException e) {
+                    System.out.println("Error al escribir en el archivo: " + e.getMessage());
+                }
+
+                xmlFiles.remove(0);
+            }
             return true;
         } catch (Exception ex) {
-            System.out.println("Error en Conector Mensajes");
-            return false;
+            System.out.println("Error en Conector Camarero");
         }
-    }
+        return false;
 
-    public void anadirMensajeBD(String Table, String sgbd, String ip, String service_bd, String usuario,
-            String password) {
-        while (puerto.enlazarSlotS().devolverNConjuntos() != 0) {
-
-            leerPuerto();
-            CargarBD(Table, sgbd, ip, service_bd, usuario,
-                    password);
-            
-            xmlFiles.remove(0);
-        }
     }
 
     //Usamos este metodo solo para las pruebas
-    public boolean borrarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-            String password) {
+    public boolean borrarFicheros() {
         try {
-            Conexion(sgbd, ip, service_bd, usuario, password);
 
-            PreparedStatement ps = getConexion().prepareStatement("DELETE FROM " + NombreTabla);
-            ps.executeUpdate();
+            File xmlDirectorio = new File(directorioActual);
+            File[] xmls = xmlDirectorio.listFiles();
 
-            desconexion();
-
+            for (int i = 1; i <= xmls.length; i++) {
+                File archivoABorrar = new File(directorioActual + "\\" + nombre + i + "_output.xml");
+                archivoABorrar.delete();
+            }
             return true;
         } catch (Exception ex) {
-            System.out.println("Error en Conector Mensajes - No se han podido borrar las tablas de la BD");
-            return false;
+            System.out.println("Error en Conector Camarero - No se han podido borrar los ficheros XML output");
         }
+        return false;
     }
+
 }

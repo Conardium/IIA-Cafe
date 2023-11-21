@@ -2,7 +2,6 @@ package controlador;
 
 import conectores.*;
 import tareas.*;
-
 import java.util.Scanner;
 
 public class ControladorProblema1 {
@@ -12,7 +11,7 @@ public class ControladorProblema1 {
     /**
      * ***************Tablas BD****************
      */
-    static String TablaInicial = "CALIFICACIONES", TablaFinalEmail = "EMAIL", TablaFinalTelefono = "SMS", TablaAlumnos= "ALUMNOS";
+    static String TablaAlumnos= "ALUMNOS";
 
     //**********Expresiones XML - XPATH********//
 
@@ -29,8 +28,8 @@ public class ControladorProblema1 {
 
     //**********Iniciales*********//
     static ConectorGMS CInicial = new ConectorGMS();
-    static ConectorMensajes cSMS = new ConectorMensajes();
-    static ConectorMensajes cEMAIL = new ConectorMensajes();
+    static ConectorMensajes cSMS = new ConectorMensajes("sms");
+    static ConectorMensajes cEMAIL = new ConectorMensajes("email");
     static ConectorAlumnos cAlum = new ConectorAlumnos();
 
     //************Tareas**************//
@@ -64,7 +63,7 @@ public class ControladorProblema1 {
         cSMS.getPuerto().enlazarSlotE(TTranslatorSMS.enlazarSlotS());
 
         //Cargamos Datos
-        if (CInicial.CargarBD(TablaInicial, sgbd, ip, service_bd, usuario, password)) {
+        if (CInicial.CargarFicheros() == true) {
             for (int i = 1; i <= CInicial.numMensajes(); i++) {
 
                 //=====> Escribimos los Mensajes en el puerto Inicial del 1 al 9
@@ -118,9 +117,9 @@ public class ControladorProblema1 {
                 TTranslatorSMS.realizarTarea();
                 TTranslatorEMAIL.realizarTarea();
 
-                // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
-                cSMS.anadirMensajeBD(TablaFinalTelefono, sgbd, ip, service_bd, usuario, password);
-                cEMAIL.anadirMensajeBD(TablaFinalEmail, sgbd, ip, service_bd, usuario, password);
+                // El leer mensaje, escribirá el mensaje en la carpeta
+                cSMS.escribirFicheros();
+                cEMAIL.escribirFicheros();
 
                 System.out.println("Presiona Enter para continuar...");
                 Scanner scanner = new Scanner(System.in);
@@ -128,12 +127,12 @@ public class ControladorProblema1 {
             }
 
             //Borramos la BD
-            System.out.println("Vamos a Borrar los mensajes finales de la BD");
+            System.out.println("Vamos a Borrar los mensajes finales de la carpeta");
             System.out.println("Presiona Enter para continuar...");
             Scanner scanner = new Scanner(System.in);
             scanner.nextLine();
-            cSMS.borrarBD(TablaFinalTelefono, sgbd, ip, service_bd, usuario, password);
-            cEMAIL.borrarBD(TablaFinalEmail, sgbd, ip, service_bd, usuario, password);
+            cSMS.borrarFicheros();
+            cEMAIL.borrarFicheros();
         }
     }
 }
