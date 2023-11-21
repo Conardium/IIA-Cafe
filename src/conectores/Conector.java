@@ -39,7 +39,6 @@ public abstract class Conector {
     public void leerPuerto() {}
 
     Connection getConexion() {
-
         return conn;
     }
 

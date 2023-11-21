@@ -11,87 +11,92 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class ConectorAlumnos extends Conector {
+
     private ArrayList<Document> xmlSQL = new ArrayList();
     private int total = 0;
     private PuertoES puerto = new PuertoES();
 
     public void busquedaBD(String Table, String sgbd, String ip, String service_bd, String usuario,
-                           String password) {
+            String password) {
 
-        try {
-            //Nos conectamos
-            Conexion(sgbd, ip, service_bd, usuario, password);
+        while (puerto.nMensajes() != 0) {
 
-            Document xmlAux = xmlFiles.remove(0);
-            String dniAlumno = "";
-            String emailAlumno = "";
-            String telefonoAlumno = "";
+            leerPuerto();
 
-            dniAlumno = xmlAux.getFirstChild().getTextContent();
+            try {
+                //Nos conectamos
+                Conexion(sgbd, ip, service_bd, usuario, password);
+                
+                Document xmlAux = xmlFiles.remove(0);
+                String dniAlumno = "";
+                String emailAlumno = "";
+                String telefonoAlumno = "";
+                
+                String expression = xmlAux.getFirstChild().getTextContent();
+                dniAlumno = xmlAux.getFirstChild().getTextContent();
 
-            String[] partes = dniAlumno.split("=");
+                String[] partes = dniAlumno.split("=");
 
-            dniAlumno = partes[1].trim();
+                dniAlumno = partes[1].trim();
 
-            dniAlumno = dniAlumno.substring(0, dniAlumno.length() - 1);
+                dniAlumno = dniAlumno.substring(0, dniAlumno.length() - 1);
+                dniAlumno = dniAlumno.substring(1, dniAlumno.length());
+                
+                
+                String consulta = expression;
+                PreparedStatement ps = getConexion().prepareStatement(consulta);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    dniAlumno = rs.getString(1);
+                    emailAlumno = rs.getString(2);
+                    telefonoAlumno = rs.getString(3);
+                }
+                //Nos desconectamos
+                desconexion();
 
-            String consulta = "SELECT DNI,EMAIL,TELEFONO FROM " + Table
-                    + " WHERE DNI = " + dniAlumno;
-            PreparedStatement ps = getConexion().prepareStatement(consulta);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                dniAlumno = rs.getString(1);
-                emailAlumno = rs.getString(2);
-                telefonoAlumno = rs.getString(3);
+                /**
+                 * *********LO QUE DEVOLVERÁ LA BD ********* <result>
+                 * <dni>dni</dni>
+                 * <email> email </email>
+                 * <telefono> telefono </telefono>
+                 * </result>
+                 */
+                ///Crear un documento XML
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document xmlOut = dBuilder.newDocument();
+
+                //Crear un elemento Padre
+                Node NodoPadre = xmlOut.createElement("result");
+                xmlOut.appendChild(NodoPadre);
+
+                //El nombre
+                Node name = xmlOut.createElement("dni");
+                name.appendChild(xmlOut.createTextNode(dniAlumno));
+                NodoPadre.appendChild(name);
+
+                //Si hay
+                Node email = xmlOut.createElement("email");
+                email.appendChild(xmlOut.createTextNode(emailAlumno));
+                NodoPadre.appendChild(email);
+
+                //Si no hay
+                if (telefonoAlumno == null) {
+                    telefonoAlumno = "NULL";
+                }
+                Node telefono = xmlOut.createElement("telefono");
+                telefono.appendChild(xmlOut.createTextNode(telefonoAlumno));
+                NodoPadre.appendChild(telefono);
+
+                xmlSQL.add(xmlOut);
+                total = xmlSQL.size();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            //Nos desconectamos
-            desconexion();
 
-             /**
-             * *********LO QUE DEVOLVERÁ LA BD
-             **********
-             * <result>
-             * <dni>dni</dni>
-             * <email> email </email>
-              * <telefono> telefono </telefono>
-             * </result>
-             */
-
-            ///Crear un documento XML
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document xmlOut = dBuilder.newDocument();
-
-            //Crear un elemento Padre
-            Node NodoPadre = xmlOut.createElement("result");
-            xmlOut.appendChild(NodoPadre);
-
-            //El nombre
-            Node name = xmlOut.createElement("dni");
-            name.appendChild(xmlOut.createTextNode(dniAlumno));
-            NodoPadre.appendChild(name);
-
-            //Si hay
-            Node email = xmlOut.createElement("email");
-            email.appendChild(xmlOut.createTextNode(emailAlumno));
-            NodoPadre.appendChild(email);
-
-            //Si no hay
-            if(telefonoAlumno == null)
-            {
-                telefonoAlumno = "NULL";
-            }
-            Node telefono = xmlOut.createElement("telefono");
-            telefono.appendChild(xmlOut.createTextNode(telefonoAlumno));
-            NodoPadre.appendChild(telefono);
-
-            xmlSQL.add(xmlOut);
-            total = xmlSQL.size();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            escribirPuerto();
         }
-
     }
 
     public PuertoES getPuerto() {
@@ -102,6 +107,7 @@ public class ConectorAlumnos extends Conector {
     public void leerPuerto() {
         xmlFiles.add(puerto.getPuertoE());
     }
+
     @Override
     public void escribirPuerto() {
         puerto.setPuertoS(devolverSQL());
@@ -109,13 +115,5 @@ public class ConectorAlumnos extends Conector {
 
     public Document devolverSQL() {
         return xmlSQL.remove(0);
-    }
-
-    public int getTotal() {
-
-        if (xmlSQL.isEmpty()) {
-            total = 0;
-        }
-        return total;
     }
 }

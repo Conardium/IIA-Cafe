@@ -11,7 +11,7 @@ public class main {
     //main//
     public static void main(String[] args) {
 
-        CAFE = new ControladorCafe();
+        //CAFE = new ControladorCafe();
         Problema_1 = new ControladorProblema1();
 
     }

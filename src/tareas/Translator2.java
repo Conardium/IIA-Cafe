@@ -16,12 +16,14 @@ public class Translator2 extends Tarea {
     private Document xmlEntrada, xmlSalida;
 
     private final String Filtro;
+    private final String FiltroNodo;
 
     private Slot slotE, slotS;
 
-    public Translator2(String Filtro)
+    public Translator2(String Filtro, String FiltroNodo)
     {
         this.Filtro = Filtro;
+        this.FiltroNodo = FiltroNodo;
         this.slotS = new Slot("TranslatorSalida");
     }
     
@@ -46,17 +48,19 @@ public class Translator2 extends Tarea {
                     //Crear un documento XML
                     Document xmlOut = dBuilder.newDocument();
 
+                    //Pillamos los nodos a partir del nodo Alumno
+                    XPathExpression expressionXpath2 = xPath.compile(FiltroNodo);
+                    Node nodoAux = (Node) expressionXpath2.evaluate(xmlEntrada, XPathConstants.NODE);
+                    
+                    
                     //Cogemos todos los nodos de entrada
-                    Node nodoAux = xmlOut.importNode(xmlEntrada.getFirstChild(), true);
+                    nodoAux = xmlOut.importNode(nodoAux, true);
                     xmlOut.appendChild(nodoAux);
 
                     Node nodoEncontrado = buscarNodoBody(xmlOut.getFirstChild(),Filtro);
 
                     nodoEncontrado.getParentNode().removeChild(nodoEncontrado);
                     
-                    Node nodoEncontrado2 = buscarNodoBody(xmlOut.getFirstChild(),"size");
-
-                    nodoEncontrado2.getParentNode().removeChild(nodoEncontrado2);
 
                     //Guardo en xmlSalida
                     xmlSalida = xmlOut;

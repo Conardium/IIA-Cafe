@@ -116,22 +116,12 @@ public class ControladorCafe {
                 //***************************************************//
                 //*****************PUERTO CAMARERO*******************//
                 //***************************************************//
-                //========> Puerto lee mensajes cold, el conector los lee y los transforma
-
 
                 //========> Conector escribe mensajes cold, el puerto los pasa al slot
-                while(cBC.getPuerto().nMensajes() != 0) {
-                    cBC.leerPuerto();
-                    cBC.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
-                    cBC.escribirPuerto();
-                }
+                cBC.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
 
                 //========> Conector escribe mensajes hot, el puerto los pasa al slot
-                while (cBH.getPuerto().nMensajes() != 0) {
-                    cBH.leerPuerto();
-                    cBH.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
-                    cBH.escribirPuerto();
-                }
+                cBH.busquedaBD(TablaBebidas, sgbd, ip, service_bd, usuario, password);
 
                 //***************************************************//
                 //******************CORRELATOR***********************//

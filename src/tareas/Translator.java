@@ -55,7 +55,7 @@ public class Translator extends Tarea {
                     Node sentence = xmlOut.createElement("sentence");
 
                     //"EXIST" SERÁ UN INTEGER (0 o 1) PARA INDICAR SI HAY EXISTENCIAS
-                    sentence.appendChild(xmlOut.createTextNode(Expresion + nameOrder + "';"));
+                    sentence.appendChild(xmlOut.createTextNode(Expresion + nameOrder + "'"));
                     xmlOut.appendChild(sentence);
 
                     //EJEMPLO DEL CONTENIDO DEL NUEVO DOCUMENTO XML

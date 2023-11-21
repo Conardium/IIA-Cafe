@@ -17,10 +17,11 @@ public class ControladorProblema1 {
     //**********Expresiones XML - XPATH********//
 
     static String ExpresionSplitter = "//alumnos//alumno"; //Padre + hijo de donde hacer Split
-    static String ExpresionTranslator = "SELECT NAME, EXIST\n\t FROM " + TablaAlumnos + "\n\tWHERE DNI = '";//En lo que se convierte el XML
+    static String ExpresionTranslator = "SELECT DNI, EMAIL, TELEFONO\n\t FROM " + TablaAlumnos + "\n\tWHERE DNI = '";//En lo que se convierte el XML
     static String FiltroTranslator = "//dni";//Para buscar en la base datos
-    static String FiltroTraslatorSMS = "EMAIL";
-    static String FiltroTraslatorEMAIL = "TELEFONO";
+    static String FiltroTranslatorFinal = "//alumno";//Para cortar por este nodo
+    static String FiltroTraslatorSMS = "EMAIL";//eliminar el nodo
+    static String FiltroTraslatorEMAIL = "TELEFONO";//eliminar el nodo
     static String FiltroCorrelator = "//dni";//Por donde hacer la correlacion
     static String FiltroContext = "//email | //telefono";//El nodo contexto
     static String FiltroBody = "//alumno";//El nodo body al que añadirlo
@@ -37,8 +38,8 @@ public class ControladorProblema1 {
     static Replicator TReplicator1 = new Replicator(2);
     static Replicator TReplicator2 = new Replicator(2);
     static Translator TTranslatorBD = new Translator(FiltroTranslator,ExpresionTranslator);
-    static Translator2 TTranslatorSMS = new Translator2(FiltroTraslatorSMS);
-    static Translator2 TTranslatorEMAIL = new Translator2(FiltroTraslatorEMAIL);
+    static Translator2 TTranslatorSMS = new Translator2(FiltroTraslatorSMS,FiltroTranslatorFinal);
+    static Translator2 TTranslatorEMAIL = new Translator2(FiltroTraslatorEMAIL,FiltroTranslatorFinal);
     static Correlator TCorrelator = new Correlator(FiltroCorrelator);
     static Content_Enricher TCEnricher = new Content_Enricher(FiltroContext,FiltroBody);
     static Filtro TFiltro = new Filtro(FiltroSMS);
@@ -87,11 +88,8 @@ public class ControladorProblema1 {
                 //***************************************************//
                 //******************BD ALUMNOS***********************//
                 //***************************************************//
-                while(cAlum.getPuerto().nMensajes() != 0) {
-                    cAlum.leerPuerto();
-                    cAlum.busquedaBD(TablaAlumnos, sgbd, ip, service_bd, usuario, password);
-                    cAlum.escribirPuerto();
-                }
+                
+                cAlum.busquedaBD(TablaAlumnos, sgbd, ip, service_bd, usuario, password);
 
                 //***************************************************//
                 //********************CORRELATOR*********************//

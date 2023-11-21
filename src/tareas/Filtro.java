@@ -37,9 +37,6 @@ public class Filtro extends Tarea {
                 encontrado = false;
                 try {
 
-                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
                     XPath xPath = XPathFactory.newInstance().newXPath();
 
                     //Pillamos el nombre
@@ -47,11 +44,9 @@ public class Filtro extends Tarea {
 
                     Node nodoSMS = (Node) expressionXpath2.evaluate(xmlEntrada, XPathConstants.NODE);
 
-                    System.out.println(nodoSMS.getFirstChild().getTextContent());
                     if (!nodoSMS.getTextContent().equalsIgnoreCase("NULL")) {
 
                         encontrado = true;
-                        System.out.println("Entro");
 
                         //Guardo en xmlSalida
                         xmlSalida = xmlEntrada;
