@@ -1,8 +1,7 @@
 package conectores;
 
 import org.w3c.dom.Document;
-import puertos.PuertoEoS;
-import puertos.PuertoES;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;

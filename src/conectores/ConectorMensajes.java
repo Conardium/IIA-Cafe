@@ -125,7 +125,7 @@ public class ConectorMensajes extends Conector {
             File xmlDirectorio = new File(directorioActual);
             File[] xmls = xmlDirectorio.listFiles();
 
-            for (int i = 1; i <= xmls.length; i++) {
+            for (int i = 1; i <= xmls.length + 1; i++) {
                 File archivoABorrar = new File(directorioActual + "\\" + nombre + i + "_output.xml");
                 archivoABorrar.delete();
             }
