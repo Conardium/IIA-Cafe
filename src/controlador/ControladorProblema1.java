@@ -38,8 +38,8 @@ public class ControladorProblema1 {
     static Replicator TReplicator1 = new Replicator(2);
     static Replicator TReplicator2 = new Replicator(2);
     static Translator TTranslatorBD = new Translator(FiltroTranslator,ExpresionTranslator);
-    static Translator2 TTranslatorSMS = new Translator2(FiltroTraslatorSMS,FiltroTranslatorFinal);
-    static Translator2 TTranslatorEMAIL = new Translator2(FiltroTraslatorEMAIL,FiltroTranslatorFinal);
+    static TranslatorV2 TTranslatorSMS = new TranslatorV2(FiltroTraslatorSMS,FiltroTranslatorFinal);
+    static TranslatorV2 TTranslatorEMAIL = new TranslatorV2(FiltroTraslatorEMAIL,FiltroTranslatorFinal);
     static Correlator TCorrelator = new Correlator(FiltroCorrelator);
     static Content_Enricher TCEnricher = new Content_Enricher(FiltroContext,FiltroBody);
     static Filtro TFiltro = new Filtro(FiltroSMS);
@@ -117,10 +117,6 @@ public class ControladorProblema1 {
                 //***************************************************//
                 TTranslatorSMS.realizarTarea();
                 TTranslatorEMAIL.realizarTarea();
-
-                //=====> El conector SMS y EMAIL recoge los datos del puerto Final
-                cSMS.leerPuerto();
-                cEMAIL.leerPuerto();
 
                 // El leer mensaje, escribirá el mensaje en la BD y lo mostrará por salida
                 cSMS.anadirMensajeBD(TablaFinalTelefono, sgbd, ip, service_bd, usuario, password);

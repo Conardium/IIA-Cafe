@@ -63,7 +63,7 @@ public class ConectorMensajes extends Conector {
 
     }
 
-    public PuertoEoS getPuerto(){
+    public PuertoEoS getPuerto() {
         return puerto;
     }
 
@@ -74,7 +74,8 @@ public class ConectorMensajes extends Conector {
     }
 
     public boolean CargarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-                            String password) {
+            String password) {
+
         try {
             Conexion(sgbd, ip, service_bd, usuario, password);
 
@@ -87,25 +88,31 @@ public class ConectorMensajes extends Conector {
             ps.executeUpdate();
 
             desconexion();
+            
+            id++;
 
             return true;
         } catch (Exception ex) {
-            System.out.println("Error en Conector Camarero");
+            System.out.println("Error en Conector Mensajes");
             return false;
         }
     }
 
-    public Document anadirMensajeBD(String Table, String sgbd, String ip, String service_bd, String usuario,
-                                    String password) {
+    public void anadirMensajeBD(String Table, String sgbd, String ip, String service_bd, String usuario,
+            String password) {
+        while (puerto.enlazarSlotS().devolverNConjuntos() != 0) {
 
-        CargarBD(Table, sgbd, ip, service_bd, usuario,
-                password);
-        return xmlFiles.remove(0);
+            leerPuerto();
+            CargarBD(Table, sgbd, ip, service_bd, usuario,
+                    password);
+            
+            xmlFiles.remove(0);
+        }
     }
 
     //Usamos este metodo solo para las pruebas
     public boolean borrarBD(String NombreTabla, String sgbd, String ip, String service_bd, String usuario,
-                            String password) {
+            String password) {
         try {
             Conexion(sgbd, ip, service_bd, usuario, password);
 
