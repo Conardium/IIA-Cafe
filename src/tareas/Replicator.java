@@ -4,8 +4,6 @@ import org.w3c.dom.Document;
 import slot.Slot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Replicator extends Tarea {
 

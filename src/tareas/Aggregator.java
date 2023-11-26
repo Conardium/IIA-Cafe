@@ -3,8 +3,6 @@ package tareas;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.w3c.dom.*;
 import slot.Slot;
